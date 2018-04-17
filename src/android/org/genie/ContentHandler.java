@@ -158,11 +158,20 @@ public class ContentHandler {
 
     private static void searchContent(JSONArray args, final CallbackContext callbackContext) throws JSONException {
         final String requestJson = args.getString(1);
+        final boolean isFilterApplied = args.getBoolean(2);
 
-        SunbirdContentSearchCriteria.SearchBuilder builder = GsonUtil.fromJson(requestJson,
-        SunbirdContentSearchCriteria.SearchBuilder.class);
+        SunbirdContentSearchCriteria criteria;
+        if (isFilterApplied) {
+            SunbirdContentSearchCriteria.FilterBuilder builder = GsonUtil.fromJson(requestJson,
+                    SunbirdContentSearchCriteria.FilterBuilder.class);
+            criteria = builder.build();
+        } else {
+            SunbirdContentSearchCriteria.SearchBuilder builder = GsonUtil.fromJson(requestJson,
+                    SunbirdContentSearchCriteria.SearchBuilder.class);
+            criteria = builder.build();
+        }
 
-        GenieService.getAsyncService().getContentService().searchSunbirdContent(builder.build(),
+        GenieService.getAsyncService().getContentService().searchSunbirdContent(criteria,
                 new IResponseHandler<SunbirdContentSearchResult>() {
                     @Override
                     public void onSuccess(GenieResponse<SunbirdContentSearchResult> genieResponse) {
