@@ -10,6 +10,10 @@ import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class FrameworkHandler {
 
     private static final String TYPE_GET_FRAMEWORK_DETAILS = "getFrameworkDetails";
