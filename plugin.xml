@@ -72,6 +72,8 @@
       <source-file src="src/android/org/genie/PageHandler.java" target-dir="src/org/genie/" />
       <source-file src="src/android/org/genie/PermissionHandler.java" target-dir="src/org/genie/" />
       <source-file src="src/android/org/genie/AnnouncementHandler.java" target-dir="src/org/genie/" />
+      <source-file src="src/android/org/genie/KeycloakOAuthSessionService.java" target-dir="src/org/genie/" />
+
     </platform>
 
     <!-- ios -->

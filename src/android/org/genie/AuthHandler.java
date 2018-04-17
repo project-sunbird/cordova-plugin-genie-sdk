@@ -19,6 +19,8 @@ public class AuthHandler {
     private static final String TYPE_VALID_SESSION = "getSessionData";
     private static final String TYPE_START_SESSION = "startSession";
     private static final String TYPE_END_SESSION = "endSession";
+    private static final String TYPE_CREATE_SESSION = "createSession";
+    private static final String TYPE_REFRESH_SESSION = "refreshSession";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
 
@@ -32,6 +34,12 @@ public class AuthHandler {
                 endSession();
             } else if (type.equals(TYPE_VALID_SESSION)) {
                 getSessionData(callbackContext);
+            }
+            else if (type.equals(TYPE_CREATE_SESSION)) {
+                createSession(args,callbackContext);
+            }
+            else if (type.equals(TYPE_REFRESH_SESSION)) {
+                createSession(args,callbackContext);
             }
 
         } catch (JSONException e) {
@@ -68,5 +76,10 @@ public class AuthHandler {
                 callbackContext.error(genieResponse.getError());
             }
         });
+    }
+
+    private static void createSession(JSONArray args,final CallbackContext callbackContext) {
+        KeycloakOAuthSessionService keycloakOAuthSessionService=new KeycloakOAuthSessionService(args,callbackContext);
+        keycloakOAuthSessionService.createSession("");
     }
 }

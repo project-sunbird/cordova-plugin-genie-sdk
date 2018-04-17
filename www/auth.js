@@ -4,6 +4,14 @@ var PLUGIN_NAME = 'GenieSDK';
 
 var auth = {
     
+  createSession: function (callbackUrl,success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["createSession",callbackUrl]);
+  },
+
+  refreshSession: function (callbackUrl,success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["refreshSession",callbackUrl]);
+  },
+  
     getBearerToken: function (success, error) {
       exec(success, error, PLUGIN_NAME, this.action(), ["getMobileDeviceBearerToken"]);
     },
