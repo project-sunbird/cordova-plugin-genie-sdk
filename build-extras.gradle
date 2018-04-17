@@ -76,14 +76,15 @@ android {
             buildConfigField 'String', 'MOBILE_APP_CONSUMER', '"mobile_device"'
             buildConfigField 'String', 'MOBILE_APP_KEY', '"sunbird-0.1"'
             buildConfigField 'String', 'MOBILE_APP_SECRET', '"86d56385115f44c985de4d44c874aa1d"'
+             buildConfigField 'String', 'OAUTH_SESSION', '"org.genie.KeycloakOAuthSessionService"'
             dimension "default"
         }
     }
 }
 
 dependencies {
-    compile "org.ekstep.genieservices:genie-providers:1.0.631"
-    compile "org.ekstep.genieservices:genie-integration:1.0.631"
+    compile "org.ekstep.genieservices:genie-providers:1.0.632"
+    compile "org.ekstep.genieservices:genie-integration:1.0.632"
     // compile "com.google.code.gson:gson:2.8.2"
     // compile "joda-time:joda-time:2.9.9"
     // compile "org.greenrobot:eventbus:3.1.1"
