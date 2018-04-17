@@ -1,7 +1,6 @@
 package org.genie;
 
 import org.apache.cordova.CallbackContext;
-import org.ekstep.genieservices.APIHandler;
 import org.ekstep.genieservices.GenieService;
 import org.ekstep.genieservices.async.IPerformable;
 import org.ekstep.genieservices.async.ThreadPool;
