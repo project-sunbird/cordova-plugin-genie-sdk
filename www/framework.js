@@ -9,6 +9,10 @@ var framework = {
 
     getCategoryData: function(requestJson, success, error) {
         exec(success, error, PLUGIN_NAME, this.action(), ["getCategoryData", requestJson]);
+    },
+
+    action: function () {
+        return "framework";
     }
 };
 
