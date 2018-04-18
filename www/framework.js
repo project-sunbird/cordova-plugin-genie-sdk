@@ -7,8 +7,8 @@ var framework = {
         exec(success, error, PLUGIN_NAME, this.action(), ["getFrameworkDetails", requestJson]);
     },
 
-    getBoards: function(requestJson, success, error) {
-        exec(success, error, PLUGIN_NAME, this.action(), ["getBoards", requestJson]);
+    getCategoryData: function(requestJson, success, error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["getCategoryData", requestJson]);
     }
 };
 

@@ -10,15 +10,13 @@ import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class FrameworkHandler {
 
     private static final String TYPE_GET_FRAMEWORK_DETAILS = "getFrameworkDetails";
-    private static final String TYPE_GET_BOARDS = "getBoards";
-    private static final String CATEGORY_BOARD = "board";
+    private static final String TYPE_GET_CATEGORY_DATA = "getCategoryData";
 
     private static Framework framework = null;
 
@@ -28,8 +26,8 @@ public class FrameworkHandler {
             if (type.equals(TYPE_GET_FRAMEWORK_DETAILS)) {
                 getFrameworkDetails(callbackContext);
             } else {
-                if (type.equals(TYPE_GET_BOARDS)) {
-                    getBoards(callbackContext);
+                if (type.equals(TYPE_GET_CATEGORY_DATA)) {
+                    getCategoryData(args, callbackContext);
                 }
             }
 
@@ -38,7 +36,7 @@ public class FrameworkHandler {
         }
     }
 
-    private static void getBoards(CallbackContext callbackContext) {
+    private static void getCategoryData(JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (framework == null) {
             FrameworkDetailsRequest.Builder builder = new FrameworkDetailsRequest.Builder();
             builder.defaultFrameworkDetails();
@@ -51,21 +49,29 @@ public class FrameworkHandler {
             framework = genieResponse.getResult();
         }
 
-        List<String> boards = new ArrayList<>();
+        final String requestJson = args.getString(1);
+        Map<String, String> requestMap = GsonUtil.fromJson(requestJson, Map.class);
+        String currentCategory = requestMap.get("currentCategory");
+        String prevCategory;
+        String selectedCode;
+        if (requestMap.containsKey("prevCategory") && requestMap.containsKey("selectedCode")) {
+            prevCategory = requestMap.get("prevCategory");
+            selectedCode = requestMap.get("selectedCode");
+        }
+
+        Object categoryData = null;
         Map<String, Object> frameworkMap = GsonUtil.fromJson(framework.getFramework(), Map.class);
         if (frameworkMap.containsKey("categories")) {
             List<Map> categories = (List<Map>) frameworkMap.get("categories");
             for (Map category : categories) {
-                if (CATEGORY_BOARD.equals(category.get("code"))) {
-                    List<Map> terms = (List<Map>) category.get("terms");
-                    for (Map term : terms) {
-                        boards.add((String) term.get("name"));
-                    }
+                if (currentCategory.equals(category.get("code"))) {
+                    categoryData = category.get("terms");
+
                 }
             }
         }
 
-        callbackContext.success(GsonUtil.toJson(boards));
+        callbackContext.success(GsonUtil.toJson(categoryData));
     }
 
     private static void getFrameworkDetails(final CallbackContext callbackContext) {
