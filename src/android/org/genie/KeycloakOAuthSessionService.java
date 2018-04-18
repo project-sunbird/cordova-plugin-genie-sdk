@@ -2,16 +2,14 @@ package org.genie;
 
 import org.apache.cordova.CallbackContext;
 import org.ekstep.genieservices.GenieService;
-import org.ekstep.genieservices.async.IPerformable;
-import org.ekstep.genieservices.async.ThreadPool;
+import org.ekstep.genieservices.ServiceConstants;
 import org.ekstep.genieservices.auth.AbstractAuthSessionImpl;
+import org.ekstep.genieservices.commons.GenieResponseBuilder;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.bean.Session;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
-import org.ekstep.genieservices.commons.utils.StringUtil;
 import org.ekstep.genieservices.eventbus.EventBus;
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -41,12 +39,7 @@ public class KeycloakOAuthSessionService extends AbstractAuthSessionImpl {
     public KeycloakOAuthSessionService() {
 
     }
-
-    public KeycloakOAuthSessionService(JSONArray args, CallbackContext callbackContext) {
-        this.callbackContext = callbackContext;
-        this.args = args;
-    }
-
+    
     private Map<String, String> getCreateSessionFormData(String userToken) {
         Map<String, String> requestMap = new HashMap<>();
         try {
@@ -71,48 +64,46 @@ public class KeycloakOAuthSessionService extends AbstractAuthSessionImpl {
     }
 
     @Override
-    public void createSession(String callBackUrl) {
+    public GenieResponse<Map<String, Object>> createSession(String userToken) {
+        GenieResponse<Map<String, Object>> genieResponse;
+        try {
+            Map<String, String> formData = getCreateSessionFormData(userToken);
+            Map<String, Object> response = invokeAPI(formData);
+            genieResponse = GenieResponseBuilder.getSuccessResponse(ServiceConstants.SUCCESS_RESPONSE);
+            genieResponse.setResult(response);
+        } catch (Exception e) {
+            genieResponse = GenieResponseBuilder.getErrorResponse("SERVER_ERROR", e.getMessage(), KeycloakOAuthSessionService.class.getName());
+        }
 
-        ThreadPool.getInstance().execute(new IPerformable<Map<String, Object>>() {
-            @Override
-            public GenieResponse<Map<String, Object>> perform() {
-                try {
-                    callbackContext.success(invokeAPI(getCreateSessionFormData(args.getString(1))));
-                } catch (Exception e) {
-//                    callbackContext.error(error);
-                }
-                return null;
-            }
-        }, null);
+        return genieResponse;
+
     }
 
     @Override
-    public void refreshSession(String refreshToken) {
-
-        ThreadPool.getInstance().execute(new IPerformable<Map<String, Object>>() {
-            @Override
-            public GenieResponse<Map<String, Object>> perform() {
-                try {
-                    String response=invokeAPI(getRefreshSessionFormData(refreshToken));
-                    if(!StringUtil.isNullOrEmpty(response)){
-                        Session session = GsonUtil.fromJson(response, Session.class);
-                        GenieService.getService().getAuthSession().startSession(session);
-                    }
-                    else{
-                        EventBus.postEvent("LOGOUT");
-                    }
-
-                } catch (Exception e) {
-                    Map<String,String> error=new HashMap<>();
-                    error.put("error","logout");
-                    callbackContext.error(GsonUtil.toJson(error));
-                }
-                return null;
+    public GenieResponse<Map<String, Object>> refreshSession(String refreshToken) {
+        GenieResponse<Map<String, Object>> genieResponse;
+        try {
+            Map<String, String> formData = getRefreshSessionFormData(refreshToken);
+            Map<String, Object> response = invokeAPI(formData);
+            if (response != null) {
+                Session session = GsonUtil.fromMap(response, Session.class);
+                GenieService.getService().getAuthSession().startSession(session);
+                genieResponse = GenieResponseBuilder.getSuccessResponse(ServiceConstants.SUCCESS_RESPONSE);
+                genieResponse.setResult(new HashMap<>());
+            } else {
+                EventBus.postEvent("LOGOUT");
+                genieResponse = GenieResponseBuilder.getErrorResponse("SERVER_ERROR", "SERVER_ERROR", KeycloakOAuthSessionService.class.getName());
             }
-        }, null);
+        } catch (Exception e) {
+            EventBus.postEvent("LOGOUT");
+            genieResponse = GenieResponseBuilder.getErrorResponse("SERVER_ERROR", e.getMessage(), KeycloakOAuthSessionService.class.getName());
+        }
+
+        return genieResponse;
+
     }
 
-    private String invokeAPI(Map<String,String> formData) throws IOException {
+    private Map<String, Object> invokeAPI(Map<String, String> formData) throws IOException {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.readTimeout(10, TimeUnit.SECONDS);
         builder.connectTimeout(10, TimeUnit.SECONDS);
@@ -122,10 +113,10 @@ public class KeycloakOAuthSessionService extends AbstractAuthSessionImpl {
                 .post(createRequestBody(formData))
                 .build();
         Response response = httpClient.newCall(request).execute();
-        if(response.isSuccessful()){
-            return response.body().string();
-        }
-        else{
+        if (response.isSuccessful()) {
+            Map<String, Object> responseMap = GsonUtil.fromJson(response.body().string(), Map.class);
+            return responseMap;
+        } else {
             return null;
         }
     }

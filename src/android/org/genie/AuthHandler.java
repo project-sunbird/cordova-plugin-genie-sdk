@@ -9,6 +9,8 @@ import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.Map;
+
 /**
  * Created by souvikmondal on 9/2/18.
  */
@@ -78,8 +80,19 @@ public class AuthHandler {
         });
     }
 
-    private static void createSession(JSONArray args,final CallbackContext callbackContext) {
-        KeycloakOAuthSessionService keycloakOAuthSessionService=new KeycloakOAuthSessionService(args,callbackContext);
-        keycloakOAuthSessionService.createSession("");
+    private static void createSession(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+        String userToken = args.getString(1);
+        GenieService.getAsyncService().getAuthSessionService().createSession(userToken, new IResponseHandler<Map<String, Object>>() {
+            @Override
+            public void onSuccess(GenieResponse<Map<String, Object>> genieResponse) {
+                callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
+            }
+
+            @Override
+            public void onError(GenieResponse<Map<String, Object>> genieResponse) {
+                callbackContext.error(genieResponse.getMessage());
+            }
+        });
+
     }
 }
