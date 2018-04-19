@@ -23,12 +23,11 @@ public class FrameworkHandler {
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
             String type = args.getString(0);
+            
             if (type.equals(TYPE_GET_FRAMEWORK_DETAILS)) {
                 getFrameworkDetails(callbackContext);
-            } else {
-                if (type.equals(TYPE_GET_CATEGORY_DATA)) {
-                    getCategoryData(args, callbackContext);
-                }
+            } else if (type.equals(TYPE_GET_CATEGORY_DATA)) {
+                getCategoryData(args, callbackContext);
             }
 
         } catch (JSONException e) {

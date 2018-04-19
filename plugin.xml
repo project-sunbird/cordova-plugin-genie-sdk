@@ -50,6 +50,8 @@
     </js-module>
     <js-module src="www/preferences.js" name="preferences">
         <clobbers target="preferences" />
+    <js-module src="www/genieSdkUtil.js" name="genieSdkUtil">
+        <clobbers target="genieSdkUtil" />
     </js-module>
     <!-- android -->
     <platform name="android">
@@ -77,6 +79,7 @@
       <source-file src="src/android/org/genie/AnnouncementHandler.java" target-dir="src/org/genie/" />
       <source-file src="src/android/org/genie/KeycloakOAuthSessionService.java" target-dir="src/org/genie/" />
       <source-file src="src/android/org/genie/SharedPreferencesHandler.java" target-dir="src/org/genie/" />
+      <source-file src="src/android/org/genie/GenieSdkUtilHandler.java" target-dir="src/org/genie/" />
 
     </platform>
 
