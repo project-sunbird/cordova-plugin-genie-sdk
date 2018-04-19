@@ -50,6 +50,7 @@
     </js-module>
     <js-module src="www/preferences.js" name="preferences">
         <clobbers target="preferences" />
+    </js-module>
     <js-module src="www/genieSdkUtil.js" name="genieSdkUtil">
         <clobbers target="genieSdkUtil" />
     </js-module>
