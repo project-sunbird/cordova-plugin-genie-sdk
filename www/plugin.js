@@ -11,6 +11,7 @@ var framework = require("./framework")
 var pageAssemble = require("./pageAssemble");
 var permission = require("./permission");
 var announcement = require("./announcement");
+var preferences = require('./preferences');
 
 var GenieSDK = {
   telemetry: telemetry,
@@ -24,7 +25,8 @@ var GenieSDK = {
   framework: framework,
   pageAssemble: pageAssemble,
   permission: permission,
-  announcement: announcement
+  announcement: announcement,
+  preferences: preferences,
 };
 
 
