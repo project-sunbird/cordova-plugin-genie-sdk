@@ -10,8 +10,12 @@ import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class FrameworkHandler {
 
@@ -23,9 +27,9 @@ public class FrameworkHandler {
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
             String type = args.getString(0);
-            
+
             if (type.equals(TYPE_GET_FRAMEWORK_DETAILS)) {
-                getFrameworkDetails(callbackContext);
+                getFrameworkDetails(args, callbackContext);
             } else if (type.equals(TYPE_GET_CATEGORY_DATA)) {
                 getCategoryData(args, callbackContext);
             }
@@ -33,6 +37,26 @@ public class FrameworkHandler {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void getFrameworkDetails(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+        final String requestJson = args.getString(1);
+
+        FrameworkDetailsRequest.Builder frameworkDetailsRequest = GsonUtil.fromJson(requestJson, FrameworkDetailsRequest.Builder.class);
+        frameworkDetailsRequest.defaultFrameworkDetails();
+
+        GenieService.getAsyncService().getFrameworkService().getFrameworkDetails(frameworkDetailsRequest.build(), new IResponseHandler<Framework>() {
+            @Override
+            public void onSuccess(GenieResponse<Framework> genieResponse) {
+                framework = genieResponse.getResult();
+                callbackContext.success(GsonUtil.toJson(genieResponse));
+            }
+
+            @Override
+            public void onError(GenieResponse<Framework> genieResponse) {
+                callbackContext.error(GsonUtil.toJson(genieResponse));
+            }
+        });
     }
 
     private static void getCategoryData(JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -49,13 +73,48 @@ public class FrameworkHandler {
         }
 
         final String requestJson = args.getString(1);
-        Map<String, String> requestMap = GsonUtil.fromJson(requestJson, Map.class);
-        String currentCategory = requestMap.get("currentCategory");
-        String prevCategory;
-        String selectedCode;
-        if (requestMap.containsKey("prevCategory") && requestMap.containsKey("selectedCode")) {
-            prevCategory = requestMap.get("prevCategory");
-            selectedCode = requestMap.get("selectedCode");
+        Map<String, Object> requestMap = GsonUtil.fromJson(requestJson, Map.class);
+        String currentCategory = (String) requestMap.get("currentCategory");
+
+
+        if (requestMap.containsKey("prevCategory")
+                && requestMap.containsKey("selectedCode")) {
+            String prevCategory = (String) requestMap.get("prevCategory");
+            ArrayList<String> selectedCodeList = (ArrayList<String>) requestMap.get("selectedCode");
+
+            List<Map> prevCategoryData = null;
+            Map<String, Object> frameworkMap = GsonUtil.fromJson(framework.getFramework(), Map.class);
+            if (frameworkMap.containsKey("categories")) {
+                List<Map> categories = (List<Map>) frameworkMap.get("categories");
+                for (Map category : categories) {
+                    if (prevCategory.equals(category.get("code"))) {
+                        prevCategoryData = (List<Map>) category.get("terms");
+                        break;
+                    }
+                }
+            }
+
+            List<Map> allAssociations = new ArrayList<>();
+
+            if (prevCategoryData != null && prevCategoryData.size() > 0) {
+                for (Map prevCategoryValue : prevCategoryData) {
+                    String code = (String) prevCategoryValue.get("code");
+                    if (selectedCodeList.contains(code)
+                            && prevCategoryValue.containsKey("associations")) {
+                        List<Map> associations = (List<Map>) prevCategoryValue.get("associations");
+
+                        if (associations != null && associations.size() > 0) {
+                            allAssociations.addAll(associations);
+                        }
+                    }
+                }
+            }
+
+            if (allAssociations.size() > 0) {
+                Set<Map> responseAssociations = new HashSet<>(allAssociations);
+                callbackContext.success(GsonUtil.toJson(responseAssociations));
+                return;
+            }
         }
 
         Object categoryData = null;
@@ -65,7 +124,7 @@ public class FrameworkHandler {
             for (Map category : categories) {
                 if (currentCategory.equals(category.get("code"))) {
                     categoryData = category.get("terms");
-
+                    break;
                 }
             }
         }
@@ -73,21 +132,4 @@ public class FrameworkHandler {
         callbackContext.success(GsonUtil.toJson(categoryData));
     }
 
-    private static void getFrameworkDetails(final CallbackContext callbackContext) {
-        FrameworkDetailsRequest.Builder frameworkDetailsRequest = new FrameworkDetailsRequest.Builder();
-        frameworkDetailsRequest.defaultFrameworkDetails();
-
-        GenieService.getAsyncService().getFrameworkService().getFrameworkDetails(frameworkDetailsRequest.build(), new IResponseHandler<Framework>() {
-            @Override
-            public void onSuccess(GenieResponse<Framework> genieResponse) {
-                framework = genieResponse.getResult();
-                callbackContext.success(GsonUtil.toJson(genieResponse));
-            }
-
-            @Override
-            public void onError(GenieResponse<Framework> genieResponse) {
-                callbackContext.error(GsonUtil.toJson(genieResponse));
-            }
-        });
-    }
 }
