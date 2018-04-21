@@ -29,7 +29,7 @@ android {
     }
 
     defaultConfig {
-        versionName System.getenv("BUILD_NUMBER") ? : "local"
+        versionName System.getenv("BUILD_NUMBER") ?: "local"
         setProperty("archivesBaseName", "sunbird-$versionName")
     }
 
