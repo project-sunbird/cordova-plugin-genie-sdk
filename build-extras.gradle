@@ -6,8 +6,6 @@
 //     cdvBuildMultipleApks=false
 //     cdvBuildToolsVersion='26.0.2'
 // }
-
-
 allprojects {
     repositories {
         jcenter()
@@ -31,7 +29,7 @@ android {
     }
 
     defaultConfig {
-        versionName System.getenv("BUILD_NUMBER") ?: "local"
+        versionName System.getenv("BUILD_NUMBER") ? : "local"
         setProperty("archivesBaseName", "sunbird-$versionName")
     }
 
@@ -68,7 +66,8 @@ android {
             buildConfigField 'String', 'ORG_SERVICE_BASE_URL', '"https://staging.open-sunbird.org/api/org/v1"'
             buildConfigField 'String', 'DATA_SERVICE_BASE_URL', '"https://staging.open-sunbird.org/api/data/v1"'
             buildConfigField 'String', 'ANNOUNCEMENT_BASE_URL', '"https://staging.open-sunbird.org/api/announcement/v1"'
-            buildConfigField 'String', 'PRODUCER_ID', '"sunbird-ionic"'
+            buildConfigField 'String', 'PRODUCER_ID', '"staging.sunbird.app-ionic"'
+            buildConfigField 'String', 'PRODUCER_UNIQUE_ID', '"sunbird.app"'
             buildConfigField 'String', 'CHANNEL_ID', '"b00bc992ef25f1a9a8d63291e20efc8d"'
             buildConfigField 'String', 'LOG_LEVEL', '"INFO"'
             buildConfigField 'String', 'PROFILE_CONFIG', '"org.ekstep.genie.base.ProfileConfig"'
@@ -76,7 +75,7 @@ android {
             buildConfigField 'String', 'MOBILE_APP_CONSUMER', '"mobile_device"'
             buildConfigField 'String', 'MOBILE_APP_KEY', '"sunbird-0.1"'
             buildConfigField 'String', 'MOBILE_APP_SECRET', '"86d56385115f44c985de4d44c874aa1d"'
-             buildConfigField 'String', 'OAUTH_SESSION', '"org.genie.KeycloakOAuthSessionService"'
+            buildConfigField 'String', 'OAUTH_SESSION', '"org.genie.KeycloakOAuthSessionService"'
             dimension "default"
         }
     }
