@@ -60,6 +60,8 @@ public class GenieSDK extends CordovaPlugin {
             SharedPreferencesHandler.handle(args, callbackContext);
         }  else if (action.equals("genieSdkUtil")) {
             GenieSdkUtilHandler.handle(args, callbackContext);
+        } else if (action.equals("share")) {
+            ShareHandler.handle(args, cordova);
         }
         return true;
     }

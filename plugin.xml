@@ -51,6 +51,9 @@
     <js-module src="www/preferences.js" name="preferences">
         <clobbers target="preferences" />
     </js-module>
+    <js-module src="www/share.js" name="share">
+        <clobbers target="share" />
+    </js-module>
     <js-module src="www/genieSdkUtil.js" name="genieSdkUtil">
         <clobbers target="genieSdkUtil" />
     </js-module>
@@ -65,6 +68,7 @@
       </config-file>
 
       <source-file src="src/android/org/genie/GenieSDK.java" target-dir="src/org/genie/" />
+      <source-file src="src/android/org/genie/ShareHandler.java" target-dir="src/org/genie/" />
       <source-file src="src/android/org/genie/TelemetryHandler.java" target-dir="src/org/genie/" />
       <source-file src="src/android/org/genie/ContentHandler.java" target-dir="src/org/genie/" />
       <source-file src="src/android/org/genie/AuthHandler.java" target-dir="src/org/genie/" />
