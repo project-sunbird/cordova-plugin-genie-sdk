@@ -66,6 +66,8 @@
           <param name="onload" value="true" />
         </feature>
       </config-file>
+      <hook type="after_prepare" src="add_application_name.js" />
+    
 
       <source-file src="src/android/org/genie/GenieSDK.java" target-dir="src/org/genie/" />
       <source-file src="src/android/org/genie/ShareHandler.java" target-dir="src/org/genie/" />
@@ -85,6 +87,8 @@
       <source-file src="src/android/org/genie/KeycloakOAuthSessionService.java" target-dir="src/org/genie/" />
       <source-file src="src/android/org/genie/SharedPreferencesHandler.java" target-dir="src/org/genie/" />
       <source-file src="src/android/org/genie/GenieSdkUtilHandler.java" target-dir="src/org/genie/" />
+      <source-file src="src/android/org/sunbird/SunbirdApplication.java" target-dir="src/org/sunbird/" />
+      <source-file src="src/android/org/sunbird/ForegroundService.java" target-dir="src/org/sunbird/" />
 
     </platform>
 

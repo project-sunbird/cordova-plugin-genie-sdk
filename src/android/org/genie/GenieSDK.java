@@ -29,7 +29,6 @@ public class GenieSDK extends CordovaPlugin {
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
-        GenieService.init(cordova.getActivity(), "org.sunbird.app");
     }
 
     @Override
