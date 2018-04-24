@@ -1,7 +1,7 @@
 package org.sunbird;
 
 import android.app.Application;
-
+import org.ekstep.genieservices.GenieService;
 
 /**
  * Created by swayangjit on 21/4/18.
