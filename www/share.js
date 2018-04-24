@@ -4,7 +4,7 @@ var PLUGIN_NAME = 'GenieSDK';
 
 var share = {
     
-  shareContent: function (contentId, onSuccess, onError) {
+  exportEcar: function (contentId, onSuccess, onError) {
     exec(onSuccess, onError, PLUGIN_NAME, this.action(), ["exportEcar", contentId]);
   },
 
