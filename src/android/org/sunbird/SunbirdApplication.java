@@ -13,6 +13,7 @@ import org.ekstep.genieservices.commons.bean.telemetry.Interrupt;
 import org.ekstep.genieservices.commons.bean.telemetry.Start;
 import org.ekstep.genieservices.commons.bean.telemetry.Telemetry;
 import org.ekstep.genieservices.utils.DeviceSpec;
+import org.genie.SDKParams;
 
 import java.util.Locale;
 
@@ -26,6 +27,7 @@ public class SunbirdApplication extends Application implements ForegroundService
         super.onCreate();
         registerActivityLifecycleCallbacks(ForegroundService.getInstance());
         ForegroundService.getInstance().registerListener(this);
+        SDKParams.setParams();
         GenieService.init(this, "org.sunbird.app");
         saveTelemetry(buildStartEvent(this));
 

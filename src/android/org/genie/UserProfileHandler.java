@@ -1,5 +1,7 @@
 package org.genie;
 
+import android.preference.PreferenceManager;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -21,8 +23,10 @@ import org.ekstep.genieservices.commons.bean.UserProfileSkillsRequest;
 import org.ekstep.genieservices.commons.bean.UserSearchCriteria;
 import org.ekstep.genieservices.commons.bean.UserSearchResult;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
+import org.ekstep.genieservices.commons.utils.StringUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by IndrajaMachani on 19/3/18.
@@ -90,7 +94,16 @@ public class UserProfileHandler {
                 new IResponseHandler<UserProfile>() {
                     @Override
                     public void onSuccess(GenieResponse<UserProfile> genieResponse) {
-                        callbackContext.success(genieResponse.getResult().getUserProfile());
+                        String userProfile = genieResponse.getResult().getUserProfile();
+                        try {
+                            JSONObject jsonObject = new JSONObject(userProfile);
+                            String channelId = jsonObject.getJSONObject("rootOrg").getString("hashTagId");
+                            GenieService.getService().getKeyStore().putString("channelId", channelId);
+                            SDKParams.setParams();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        callbackContext.success(userProfile);
                     }
 
                     @Override
@@ -99,6 +112,7 @@ public class UserProfileHandler {
                     }
                 });
     }
+
 
     /**
      * get TenantInfo
