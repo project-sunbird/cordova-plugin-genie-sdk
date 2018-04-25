@@ -27,8 +27,8 @@ public class SunbirdApplication extends Application implements ForegroundService
         super.onCreate();
         registerActivityLifecycleCallbacks(ForegroundService.getInstance());
         ForegroundService.getInstance().registerListener(this);
-        SDKParams.setParams();
         GenieService.init(this, "org.sunbird.app");
+        SDKParams.setParams();
         saveTelemetry(buildStartEvent(this));
 
     }
