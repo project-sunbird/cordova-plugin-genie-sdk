@@ -90,6 +90,7 @@
       <source-file src="src/android/org/genie/GenieSdkUtilHandler.java" target-dir="src/org/genie/" />
       <source-file src="src/android/org/sunbird/SunbirdApplication.java" target-dir="src/org/sunbird/" />
       <source-file src="src/android/org/sunbird/ForegroundService.java" target-dir="src/org/sunbird/" />
+      <source-file src="src/android/org/genie/SDKParams.java" target-dir="src/org/genie/" />
 
     </platform>
 
