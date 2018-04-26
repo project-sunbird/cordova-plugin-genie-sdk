@@ -7,6 +7,9 @@ var share = {
   exportEcar: function (contentId, onSuccess, onError) {
     exec(onSuccess, onError, PLUGIN_NAME, this.action(), ["exportEcar", contentId]);
   },
+  exportTelemetry: function (onSuccess, onError) {
+    exec(onSuccess, onError, PLUGIN_NAME, this.action(), ["exportTelemetry"]);
+  },
 
   action: function () {
       return "share";

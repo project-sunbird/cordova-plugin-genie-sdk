@@ -14,6 +14,7 @@ import org.ekstep.genieservices.commons.bean.telemetry.Start;
 import org.ekstep.genieservices.commons.bean.telemetry.Telemetry;
 import org.ekstep.genieservices.utils.DeviceSpec;
 import org.genie.SDKParams;
+import org.sunbird.sync.TelemetrySyncOperation;
 
 import java.util.Locale;
 
@@ -30,6 +31,7 @@ public class SunbirdApplication extends Application implements ForegroundService
         GenieService.init(this, "org.sunbird.app");
         SDKParams.setParams();
         saveTelemetry(buildStartEvent(this));
+        TelemetrySyncOperation.startSyncingTelemetry();
 
     }
 
@@ -37,12 +39,14 @@ public class SunbirdApplication extends Application implements ForegroundService
     public void onSwitchForeground() {
         Interrupt interrupt = new Interrupt.Builder().environment("home").type("background").pageId("").build();
         saveTelemetry(interrupt);
+        TelemetrySyncOperation.startSyncingTelemetry();
     }
 
     @Override
     public void onSwitchBackground() {
         Interrupt resume = new Interrupt.Builder().environment("home").type("resume").pageId("").build();
         saveTelemetry(resume);
+        TelemetrySyncOperation.shutDownSchedulers();
     }
 
     private void saveTelemetry(Telemetry telemetry){
