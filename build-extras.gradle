@@ -32,7 +32,7 @@ android {
     }
 
     defaultConfig {
-        versionName System.getenv("BUILD_NUMBER") ?: "local"
+        versionName "staging-2.0.0.01"
         setProperty("archivesBaseName", "sunbird-$versionName")
     }
 
