@@ -7,8 +7,8 @@
     <description></description>
     <license>MIT</license>
     <keywords></keywords>
-    <framework src="build-extras.gradle" custom="true" type="gradleReference"/>
     <framework src="secret.gradle" custom="true" type="gradleReference"/>
+    <framework src="build-extras.gradle" custom="true" type="gradleReference"/>
 
     <js-module src="www/plugin.js" name="plugin">
         <clobbers target="GenieSDK" />
