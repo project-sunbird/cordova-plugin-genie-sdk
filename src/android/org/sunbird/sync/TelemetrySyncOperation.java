@@ -107,7 +107,7 @@ public class TelemetrySyncOperation {
     }
 
     public static SyncConfiguration getConfiguration() {
-        String syncConfig = GenieService.getService().getKeyStore().getString("sync_config", SyncConfiguration.ALWAYS_ON.toString());
+        String syncConfig = GenieService.getService().getKeyStore().getString("sunbirdsync_config", SyncConfiguration.ALWAYS_ON.toString());
         return SyncConfiguration.valueOf(syncConfig);
     }
 
