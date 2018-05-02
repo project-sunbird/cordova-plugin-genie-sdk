@@ -20,6 +20,15 @@ var profile = {
     exec(success, error, PLUGIN_NAME, this.action(), ["getCurrentUser"]);
   },
 
+  setCurrentProfile: function (isGuestMode,requestJson, success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["setCurrentProfile", isGuestMode,requestJson]);
+  },
+
+  setAnonymousUser: function (success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["setAnonymousUser", requestJson]);
+  },
+  
+
   action: function () {
     return "profile";
   }
