@@ -25,7 +25,7 @@ var profile = {
   },
 
   setAnonymousUser: function (success, error) {
-    exec(success, error, PLUGIN_NAME, this.action(), ["setAnonymousUser", requestJson]);
+    exec(success, error, PLUGIN_NAME, this.action(), ["setAnonymousUser"]);
   },
   
 
