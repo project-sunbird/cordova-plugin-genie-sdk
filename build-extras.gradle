@@ -80,7 +80,7 @@ android {
             buildConfigField 'String', 'MOBILE_APP_KEY', "\"${globalConf.appKey}\""
             buildConfigField 'String', 'MOBILE_APP_SECRET', "\"${globalConf.appSecret}\""
             buildConfigField 'String', 'OAUTH_SESSION', '"org.genie.KeycloakOAuthSessionService"'
-            dimension "default"
+            flavorDimensions "default"
         }
     }
 }
