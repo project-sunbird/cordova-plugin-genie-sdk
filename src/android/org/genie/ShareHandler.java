@@ -30,8 +30,13 @@ import org.ekstep.genieservices.commons.bean.TelemetryExportResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.sunbird.app.BuildConfig;
+import org.sunbird.app.R;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +49,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 public class ShareHandler {
 
     private static final String TYPE_EXPORT_ECAR = "exportEcar";
+    private static final String TYPE_EXPORT_APK = "exportApk";
     private static final String TYPE_EXPORT_TELEMETRY = "exportTelemetry";
 
     public static void handle(final JSONArray args, final CordovaInterface cordova, final CallbackContext callbackContext) {
@@ -59,11 +65,62 @@ public class ShareHandler {
                 case TYPE_EXPORT_TELEMETRY:
                     exportTelemetry(callbackContext);
                     break;
+
+                case TYPE_EXPORT_APK:
+                    exportApk(cordova, callbackContext);
+                    break;
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private static void exportApk(final CordovaInterface cordova, final CallbackContext callbackContext) {
+        ApplicationInfo app = cordova.getActivity().getApplicationInfo();
+        String filePath = app.sourceDir;
+        final Intent intent = new Intent(Intent.ACTION_SEND);
+
+        // MIME of .apk is "application/vnd.android.package-archive".
+        // but Bluetooth does not accept this. Let's use "*/*" instead.
+        intent.setType("*/*");
+
+        // Append file
+        File originalApk = new File(filePath);
+
+        try {
+            //Make new directory in new location
+            File tempFile = new File(cordova.getActivity().getExternalCacheDir() + "/ExtractedApk");
+            //If directory doesn't exists create new
+            if (!tempFile.isDirectory())
+                if (!tempFile.mkdirs())
+                    return;
+            //Get application's name and convert to lowercase
+            tempFile = new File(tempFile.getPath() + "/" +
+                    cordova.getActivity().getString(R.string.app_name) + "_" +
+                    BuildConfig.VERSION_NAME + ".apk");
+            //If file doesn't exists create new
+            if (!tempFile.exists()) {
+                if (!tempFile.createNewFile()) {
+                    return;
+                }
+            }
+            //Copy file to new location
+            InputStream in = new FileInputStream(originalApk);
+            OutputStream out = new FileOutputStream(tempFile);
+
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            in.close();
+            out.close();
+            System.out.println("File copied.");
+            callbackContext.success(tempFile.getPath());
+        } catch (Exception ex) {
+            callbackContext.error("failure");
+        }
     }
 
 

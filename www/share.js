@@ -11,6 +11,10 @@ var share = {
     exec(onSuccess, onError, PLUGIN_NAME, this.action(), ["exportTelemetry"]);
   },
 
+  exportApk: function (onSuccess, onError) {
+    exec(onSuccess, onError, PLUGIN_NAME, this.action(), ["exportApk"]);
+  },
+
   action: function () {
       return "share";
   }
