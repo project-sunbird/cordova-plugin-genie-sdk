@@ -337,9 +337,14 @@ public class ContentHandler {
     private static void getSearchCriteriaFromRequest(JSONArray args, final CallbackContext callbackContext) throws JSONException {
         final String requestJson = args.getString(1);
 
+        Map<String, Object> requestMap = null;
+        if (!StringUtil.isNullOrEmpty(requestJson) && !requestJson.equals("null")) {
+            requestMap = GsonUtil.fromJson((requestJson).replace("\\", ""), Map.class);
+        }
+
         Map<String, Object> searchMap = null;
-        if (!StringUtil.isNullOrEmpty(requestJson)) {
-            searchMap = GsonUtil.fromJson((requestJson).replace("\\", ""), Map.class);
+        if(requestMap != null && !requestMap.isEmpty()) {
+            searchMap = (Map<String, Object>) requestMap.get("request");
         }
 
         SunbirdContentSearchCriteria searchCriteria = org.ekstep.genieservices.content.ContentHandler.getSearchCriteria(searchMap);
