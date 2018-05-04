@@ -18,14 +18,13 @@ import org.ekstep.genieservices.commons.bean.ContentFilterCriteria;
 import org.ekstep.genieservices.commons.bean.ContentImport;
 import org.ekstep.genieservices.commons.bean.ContentImportRequest;
 import org.ekstep.genieservices.commons.bean.ContentImportResponse;
-import org.ekstep.genieservices.commons.bean.ContentSearchCriteria;
-import org.ekstep.genieservices.commons.bean.ContentSearchResult;
-import org.ekstep.genieservices.commons.bean.SunbirdContentSearchResult;
-import org.ekstep.genieservices.commons.bean.SunbirdContentSearchCriteria;
 import org.ekstep.genieservices.commons.bean.EcarImportRequest;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
+import org.ekstep.genieservices.commons.bean.SunbirdContentSearchCriteria;
+import org.ekstep.genieservices.commons.bean.SunbirdContentSearchResult;
 import org.ekstep.genieservices.commons.bean.enums.DownloadAction;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
+import org.ekstep.genieservices.commons.utils.StringUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,6 +51,7 @@ public class ContentHandler {
     private static final String TYPE_SET_DOWNLOAD_ACTION = "setDownloadAction";
     private static final String TYPE_GET_DOWNLOAD_STATE = "getDownloadState";
     private static final String TYPE_DELETE_CONTENTS = "deleteContent";
+    private static final String TYPE_GET_SEARCH_CRITERIA_FROM_REQUEST = "getSearchCriteriaFromRequest";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -80,6 +80,8 @@ public class ContentHandler {
                 setDownloadAction(args, callbackContext);
             } else if (type.equals(TYPE_GET_DOWNLOAD_STATE)) {
                 getDownloadState(callbackContext);
+            } else if (type.equals(TYPE_GET_SEARCH_CRITERIA_FROM_REQUEST)) {
+                getSearchCriteriaFromRequest(args, callbackContext);
             }
 
         } catch (JSONException e) {
@@ -318,7 +320,7 @@ public class ContentHandler {
                 });
     }
 
-    private static void getDownloadState(final CallbackContext callbackContext) throws JSONException {
+    private static void getDownloadState(final CallbackContext callbackContext) {
         GenieService.getAsyncService().getContentService().getDownloadState(new IResponseHandler<DownloadAction>() {
             @Override
             public void onSuccess(GenieResponse<DownloadAction> genieResponse) {
@@ -330,7 +332,22 @@ public class ContentHandler {
                 callbackContext.error(GsonUtil.toJson(genieResponse));
             }
         });
+    }
 
+    private static void getSearchCriteriaFromRequest(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+        final String requestJson = args.getString(1);
+
+        Map<String, Object> searchMap = null;
+        if (!StringUtil.isNullOrEmpty(requestJson)) {
+            searchMap = GsonUtil.fromJson((requestJson).replace("\\", ""), Map.class);
+        }
+
+        SunbirdContentSearchCriteria searchCriteria = org.ekstep.genieservices.content.ContentHandler.getSearchCriteria(searchMap);
+        if (searchCriteria != null) {
+            callbackContext.success(GsonUtil.toJson(searchCriteria));
+        } else {
+            callbackContext.error("No search criteria.");
+        }
     }
 
 }

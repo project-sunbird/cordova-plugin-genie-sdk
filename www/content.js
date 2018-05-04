@@ -52,6 +52,10 @@ var content = {
     exec(success, error, PLUGIN_NAME, this.action(), ["getDownloadState", requestJson]);
   },
 
+  getSearchCriteriaFromRequest: function (requestJson, success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["getSearchCriteriaFromRequest", requestJson]);
+  },
+
   action: function () {
     return "content";
   }
