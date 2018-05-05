@@ -57,6 +57,10 @@ var telemetry = {
     exec(success, error, PLUGIN_NAME, this.action(), ['sync']);
   },
 
+  getTelemetryStat: function (success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ['getTelemetryStat']);
+  },
+
   action: function () {
     return "telemetry";
   }
