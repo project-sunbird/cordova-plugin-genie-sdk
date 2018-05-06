@@ -8,6 +8,7 @@ import org.ekstep.genieservices.GenieService;
 import org.ekstep.genieservices.commons.IResponseHandler;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.bean.SyncStat;
+import org.ekstep.genieservices.commons.bean.TelemetryStat;
 import org.ekstep.genieservices.commons.bean.telemetry.Audit;
 import org.ekstep.genieservices.commons.bean.telemetry.End;
 import org.ekstep.genieservices.commons.bean.telemetry.Error;
@@ -21,6 +22,7 @@ import org.ekstep.genieservices.commons.bean.telemetry.Search;
 import org.ekstep.genieservices.commons.bean.telemetry.Share;
 import org.ekstep.genieservices.commons.bean.telemetry.Start;
 import org.ekstep.genieservices.commons.bean.telemetry.Telemetry;
+import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
@@ -44,6 +46,7 @@ public class TelemetryHandler {
     private static final String TYPE_SAVE_SEARCH = "saveSearch";
     private static final String TYPE_SAVE_SHARE = "saveShare";
     private static final String TYPE_SYNC = "sync";
+    private static final String TYPE_TELEMETRY_STAT = "getTelemetryStat";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -74,6 +77,8 @@ public class TelemetryHandler {
                 saveShare(args);
             } else if (type.equals(TYPE_SYNC)) {
                 sync(callbackContext);
+            }else if (type.equals(TYPE_TELEMETRY_STAT)) {
+                getTelemetryStat(callbackContext);
             }
 
         } catch (JSONException e) {
@@ -104,6 +109,21 @@ public class TelemetryHandler {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+    }
+
+    private static void getTelemetryStat(final CallbackContext callbackContext) {
+
+        GenieService.getAsyncService().getTelemetryService().getTelemetryStat(new IResponseHandler<TelemetryStat>() {
+            @Override
+            public void onSuccess(GenieResponse<TelemetryStat> genieResponse) {
+                callbackContext.success(GsonUtil.toJson(genieResponse));
+            }
+
+            @Override
+            public void onError(GenieResponse<TelemetryStat> genieResponse) {
+                callbackContext.error(genieResponse.getError());
             }
         });
     }
