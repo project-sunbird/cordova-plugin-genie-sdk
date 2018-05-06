@@ -19,6 +19,10 @@ var genieSdkUtil = {
         exec(success, error, PLUGIN_NAME, this.action(), ["isConnectedOverWifi"]);
     },
 
+    getBuildConfigParam: function (param,success, error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["getBuildConfigParam",param]);
+      },
+
     action: function () {
         return "genieSdkUtil";
     }
