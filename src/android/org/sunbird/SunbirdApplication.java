@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.ekstep.genieservices.GenieService;
 import org.ekstep.genieservices.commons.ILocationInfo;
 import org.ekstep.genieservices.commons.IResponseHandler;
@@ -14,9 +16,12 @@ import org.ekstep.genieservices.commons.bean.telemetry.Start;
 import org.ekstep.genieservices.commons.bean.telemetry.Telemetry;
 import org.ekstep.genieservices.utils.DeviceSpec;
 import org.genie.SDKParams;
+import org.sunbird.app.BuildConfig;
 import org.sunbird.sync.TelemetrySyncOperation;
 
 import java.util.Locale;
+
+import io.fabric.sdk.android.Fabric;
 
 
 /**
@@ -32,6 +37,7 @@ public class SunbirdApplication extends Application implements ForegroundService
         SDKParams.setParams();
         saveTelemetry(buildStartEvent(this));
         TelemetrySyncOperation.startSyncingTelemetry();
+        initCrashlytics();
 
     }
 
@@ -128,5 +134,11 @@ public class SunbirdApplication extends Application implements ForegroundService
 
     public  String floatForm(double d) {
         return String.format(Locale.US, "%.2f", d);
+    }
+
+    private void initCrashlytics(){
+        if(BuildConfig.USE_CRASHLYTICS){
+            Fabric.with(this, new Crashlytics());
+        }
     }
 }

@@ -65,6 +65,11 @@
           <param name="onload" value="true" />
         </feature>
       </config-file>
+       <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <meta-data
+                android:name="io.fabric.ApiKey"
+                android:value="@string/release_fabric_api_key" />
+        </config-file>
       <hook type="after_prepare" src="add_application_name.js" />
     
 
