@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
 
-// import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.Crashlytics;
 
 import org.ekstep.genieservices.GenieService;
 import org.ekstep.genieservices.commons.ILocationInfo;
@@ -21,7 +21,7 @@ import org.sunbird.sync.TelemetrySyncOperation;
 
 import java.util.Locale;
 
-// import io.fabric.sdk.android.Fabric;
+import io.fabric.sdk.android.Fabric;
 
 
 /**
@@ -37,7 +37,7 @@ public class SunbirdApplication extends Application implements ForegroundService
         SDKParams.setParams();
         saveTelemetry(buildStartEvent(this));
         TelemetrySyncOperation.startSyncingTelemetry();
-        // initCrashlytics();
+        initCrashlytics();
 
     }
 
@@ -136,9 +136,9 @@ public class SunbirdApplication extends Application implements ForegroundService
         return String.format(Locale.US, "%.2f", d);
     }
 
-    // private void initCrashlytics(){
-    //     if(BuildConfig.USE_CRASHLYTICS){
-    //         Fabric.with(this, new Crashlytics());
-    //     }
-    // }
+    private void initCrashlytics(){
+        if(BuildConfig.USE_CRASHLYTICS){
+            Fabric.with(this, new Crashlytics());
+        }
+    }
 }
