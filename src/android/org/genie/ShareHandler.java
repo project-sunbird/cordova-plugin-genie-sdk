@@ -13,6 +13,7 @@ import org.ekstep.genieservices.commons.bean.ContentExportResponse;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.bean.TelemetryExportRequest;
 import org.ekstep.genieservices.commons.bean.TelemetryExportResponse;
+import org.ekstep.genieservices.utils.BuildConfigUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -84,8 +85,8 @@ public class ShareHandler {
                     return;
             //Get application's name and convert to lowercase
             tempFile = new File(tempFile.getPath() + "/" +
-                    cordova.getContext().getApplicationInfo().name + "_" +
-                    getFieldFromBuildConfig(cordova, "VERSION_NAME") + ".apk");
+                    cordova.getActivity().getString(getIdOfResource(cordova, "_app_name", "string")) + "_" +
+                    BuildConfigUtil.getBuildConfigValue(cordova.getContext().getApplicationInfo().packageName, "VERSION_NAME") + ".apk");
             //If file doesn't exists create new
             if (!tempFile.exists()) {
                 if (!tempFile.createNewFile()) {
@@ -108,20 +109,6 @@ public class ShareHandler {
         } catch (Exception ex) {
             callbackContext.error("failure");
         }
-    }
-
-    private static final Object getFieldFromBuildConfig(CordovaInterface cordovaInterface, String fieldName) {
-        try {
-            return Class.forName(cordovaInterface.getContext().getApplicationInfo().packageName + ".BuildConfig")
-                    .getField(fieldName).get(null);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
 
