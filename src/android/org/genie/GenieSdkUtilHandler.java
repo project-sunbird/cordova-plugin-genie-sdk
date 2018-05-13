@@ -1,11 +1,11 @@
 package org.genie;
 
 import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaInterface;
 import org.ekstep.genieservices.GenieService;
 import org.ekstep.genieservices.utils.BuildConfigUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.sunbird.app.BuildConfig;
 
 public class GenieSdkUtilHandler {
 
@@ -15,7 +15,7 @@ public class GenieSdkUtilHandler {
     private static final String TYPE_IS_CONNECTED_OVER_WIFI = "isConnectedOverWifi";
     private static final String TYPE_GET_BUILD_CONFIG_PARAM = "getBuildConfigParam";
 
-    public static void handle(JSONArray args, final CallbackContext callbackContext) {
+    public static void handle(CordovaInterface cordova, JSONArray args, final CallbackContext callbackContext) {
         try {
             String type = args.getString(0);
 
@@ -28,7 +28,7 @@ public class GenieSdkUtilHandler {
             } else if (type.equals(TYPE_IS_CONNECTED_OVER_WIFI)) {
                 isConnectedOverWifi(callbackContext);
             } else if (type.equals(TYPE_GET_BUILD_CONFIG_PARAM)) {
-                getBuildConfigParam(args, callbackContext);
+                getBuildConfigParam(cordova, args, callbackContext);
             }
 
         } catch (JSONException e) {
@@ -56,9 +56,9 @@ public class GenieSdkUtilHandler {
         callbackContext.success(Boolean.toString(isConnectedOverWifi));
     }
 
-    private static void getBuildConfigParam(JSONArray args, CallbackContext callbackContext) throws JSONException {
+    private static void getBuildConfigParam(CordovaInterface cordova, JSONArray args, CallbackContext callbackContext) throws JSONException {
         String param = args.getString(1);
-        String value = BuildConfigUtil.getBuildConfigValue(BuildConfig.APPLICATION_ID, param).toString();
+        String value = BuildConfigUtil.getBuildConfigValue(cordova.getContext().getApplicationInfo().packageName, param).toString();
         callbackContext.success(value);
     }
 }

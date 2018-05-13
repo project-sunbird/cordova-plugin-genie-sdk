@@ -1,22 +1,8 @@
 package org.genie;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Environment;
-import android.support.v4.content.FileProvider;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -29,8 +15,6 @@ import org.ekstep.genieservices.commons.bean.TelemetryExportRequest;
 import org.ekstep.genieservices.commons.bean.TelemetryExportResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.sunbird.app.BuildConfig;
-import org.sunbird.app.R;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,8 +23,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * Created by souvikmondal on 23/4/18.
@@ -76,6 +58,11 @@ public class ShareHandler {
 
     }
 
+    private static int getIdOfResource(CordovaInterface cordova, String name, String resourceType) {
+        return cordova.getActivity().getResources().getIdentifier(name, resourceType,
+                cordova.getActivity().getApplicationInfo().packageName);
+    }
+
     private static void exportApk(final CordovaInterface cordova, final CallbackContext callbackContext) {
         ApplicationInfo app = cordova.getActivity().getApplicationInfo();
         String filePath = app.sourceDir;
@@ -97,8 +84,8 @@ public class ShareHandler {
                     return;
             //Get application's name and convert to lowercase
             tempFile = new File(tempFile.getPath() + "/" +
-                    cordova.getActivity().getString(R.string.app_name) + "_" +
-                    BuildConfig.VERSION_NAME + ".apk");
+                    cordova.getContext().getApplicationInfo().name + "_" +
+                    getFieldFromBuildConfig(cordova, "VERSION_NAME") + ".apk");
             //If file doesn't exists create new
             if (!tempFile.exists()) {
                 if (!tempFile.createNewFile()) {
@@ -121,6 +108,20 @@ public class ShareHandler {
         } catch (Exception ex) {
             callbackContext.error("failure");
         }
+    }
+
+    private static final Object getFieldFromBuildConfig(CordovaInterface cordovaInterface, String fieldName) {
+        try {
+            return Class.forName(cordovaInterface.getContext().getApplicationInfo().packageName + ".BuildConfig")
+                    .getField(fieldName).get(null);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

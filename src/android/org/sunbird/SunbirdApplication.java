@@ -14,9 +14,9 @@ import org.ekstep.genieservices.commons.bean.telemetry.DeviceSpecification;
 import org.ekstep.genieservices.commons.bean.telemetry.Interrupt;
 import org.ekstep.genieservices.commons.bean.telemetry.Start;
 import org.ekstep.genieservices.commons.bean.telemetry.Telemetry;
+import org.ekstep.genieservices.utils.BuildConfigUtil;
 import org.ekstep.genieservices.utils.DeviceSpec;
 import org.genie.SDKParams;
-import org.sunbird.app.BuildConfig;
 import org.sunbird.sync.TelemetrySyncOperation;
 
 import java.util.Locale;
@@ -33,7 +33,7 @@ public class SunbirdApplication extends Application implements ForegroundService
         super.onCreate();
         registerActivityLifecycleCallbacks(ForegroundService.getInstance());
         ForegroundService.getInstance().registerListener(this);
-        GenieService.init(this, "org.sunbird.app");
+        GenieService.init(this, getApplicationInfo().packageName);
         SDKParams.setParams();
         saveTelemetry(buildStartEvent(this));
         TelemetrySyncOperation.startSyncingTelemetry();
@@ -137,7 +137,7 @@ public class SunbirdApplication extends Application implements ForegroundService
     }
 
     private void initCrashlytics(){
-        if(BuildConfig.USE_CRASHLYTICS){
+        if(BuildConfigUtil.getBuildConfigValue(getApplicationInfo().packageName, "USE_CRASHLYTICS")){
             Fabric.with(this, new Crashlytics());
         }
     }
