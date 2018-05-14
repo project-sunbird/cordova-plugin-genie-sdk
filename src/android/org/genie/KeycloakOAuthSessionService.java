@@ -1,5 +1,7 @@
 package org.genie;
 
+import android.content.Context;
+
 import org.apache.cordova.CallbackContext;
 import org.ekstep.genieservices.GenieService;
 import org.ekstep.genieservices.ServiceConstants;
@@ -9,6 +11,7 @@ import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.bean.Session;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.ekstep.genieservices.eventbus.EventBus;
+import org.ekstep.genieservices.utils.BuildConfigUtil;
 import org.json.JSONArray;
 
 import java.io.IOException;
@@ -30,7 +33,6 @@ import okhttp3.Response;
 
 public class KeycloakOAuthSessionService extends AbstractAuthSessionImpl {
 
-    private static String REDIRECT_BASE_URL = "https://staging.open-sunbird.org";
     private static String END_POINT = "/auth/realms/sunbird/protocol/openid-connect/token";
 
     private JSONArray args;
@@ -43,7 +45,8 @@ public class KeycloakOAuthSessionService extends AbstractAuthSessionImpl {
     private Map<String, String> getCreateSessionFormData(String userToken) {
         Map<String, String> requestMap = new HashMap<>();
         try {
-            requestMap.put("redirect_uri", "https://" + "staging.open-sunbird.org" + "/" + "oauth2callback");
+            Context context =(Context) mAppContext.getContext();
+            requestMap.put("redirect_uri", BuildConfigUtil.getBuildConfigValue(context.getPackageName(),"BASE_URL")+"/oauth2callback");
             requestMap.put("code", userToken);
             requestMap.put("grant_type", "authorization_code");
             requestMap.put("client_id", "android");
@@ -108,8 +111,9 @@ public class KeycloakOAuthSessionService extends AbstractAuthSessionImpl {
         builder.readTimeout(10, TimeUnit.SECONDS);
         builder.connectTimeout(10, TimeUnit.SECONDS);
         OkHttpClient httpClient = builder.build();
+        Context context =(Context) mAppContext.getContext();
         Request request = new Request.Builder()
-                .url(REDIRECT_BASE_URL + END_POINT)
+                .url(BuildConfigUtil.getBuildConfigValue(context.getPackageName(),"BASE_URL") + END_POINT)
                 .post(createRequestBody(formData))
                 .build();
         Response response = httpClient.newCall(request).execute();
