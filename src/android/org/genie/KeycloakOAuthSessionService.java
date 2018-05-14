@@ -46,7 +46,7 @@ public class KeycloakOAuthSessionService extends AbstractAuthSessionImpl {
         Map<String, String> requestMap = new HashMap<>();
         try {
             Context context =(Context) mAppContext.getContext();
-            requestMap.put("redirect_uri", BuildConfigUtil.getBuildConfigValue(context.getPackageName(),"BASE_URL")+"/oauth2callback");
+            requestMap.put("redirect_uri", BuildConfigUtil.getBuildConfigValue(context.getApplicationInfo().packageName,"BASE_URL")+"/oauth2callback");
             requestMap.put("code", userToken);
             requestMap.put("grant_type", "authorization_code");
             requestMap.put("client_id", "android");
@@ -113,7 +113,7 @@ public class KeycloakOAuthSessionService extends AbstractAuthSessionImpl {
         OkHttpClient httpClient = builder.build();
         Context context =(Context) mAppContext.getContext();
         Request request = new Request.Builder()
-                .url(BuildConfigUtil.getBuildConfigValue(context.getPackageName(),"BASE_URL") + END_POINT)
+                .url(BuildConfigUtil.getBuildConfigValue(context.getApplicationInfo().packageName,"BASE_URL") + END_POINT)
                 .post(createRequestBody(formData))
                 .build();
         Response response = httpClient.newCall(request).execute();
