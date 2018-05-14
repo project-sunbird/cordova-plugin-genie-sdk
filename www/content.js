@@ -32,6 +32,14 @@ var content = {
     exec(success, error, PLUGIN_NAME, this.action(), ["deleteContent", requestJson]);
   },
 
+  flagContent: function (requestJson, success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["flagContent", requestJson]);
+  },
+
+  sendFeedback: function (requestJson, success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["sendFeedback", requestJson]);
+  },
+
   getImportStatus: function (requestJson, success, error) {
     exec(success, error, PLUGIN_NAME, this.action(), ["getImportStatus", requestJson]);
   },
