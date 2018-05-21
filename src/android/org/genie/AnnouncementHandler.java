@@ -79,22 +79,22 @@ public class AnnouncementHandler {
     }
 
     private static void updateAnnouncementState(JSONArray args, final CallbackContext callbackContext) throws JSONException {
-        // final String requestJson = args.getString(1);
-        // UpdateAnnouncementStateRequest.Builder builder = GsonUtil.fromJson(requestJson,
-        //         UpdateAnnouncementStateRequest.Builder.class);
+        final String requestJson = args.getString(1);
+        UpdateAnnouncementStateRequest.Builder builder = GsonUtil.fromJson(requestJson,
+                UpdateAnnouncementStateRequest.Builder.class);
 
-        // GenieService.getAsyncService().getAnnouncementService().updateAnnouncementState(builder.build(), 
-        //         new IResponseHandler<Void>() {
-        //     @Override
-        //     public void onSuccess(GenieResponse<Void> genieResponse) {
-        //         callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
-        //     }
+        GenieService.getAsyncService().getAnnouncementService().updateAnnouncementState(builder.build(), 
+                new IResponseHandler<Void>() {
+            @Override
+            public void onSuccess(GenieResponse<Void> genieResponse) {
+                callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
+            }
 
-        //     @Override
-        //     public void onError(GenieResponse<Void> genieResponse) {
-        //         callbackContext.error(GsonUtil.toJson(genieResponse.getError()));
-        //     }
-        // });
+            @Override
+            public void onError(GenieResponse<Void> genieResponse) {
+                callbackContext.error(GsonUtil.toJson(genieResponse.getError()));
+            }
+        });
     }
 
 }
