@@ -43,14 +43,14 @@ public class SunbirdApplication extends Application implements ForegroundService
 
     @Override
     public void onSwitchForeground() {
-        Interrupt interrupt = new Interrupt.Builder().environment("home").type("background").pageId("").build();
+        Interrupt interrupt = new Interrupt.Builder().environment("home").type("resume").pageId("").build();
         saveTelemetry(interrupt);
         TelemetrySyncOperation.startSyncingTelemetry();
     }
 
     @Override
     public void onSwitchBackground() {
-        Interrupt resume = new Interrupt.Builder().environment("home").type("resume").pageId("").build();
+        Interrupt resume = new Interrupt.Builder().environment("home").type("background").pageId("").build();
         saveTelemetry(resume);
         TelemetrySyncOperation.shutDownSchedulers();
     }
