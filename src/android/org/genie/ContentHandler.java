@@ -14,16 +14,17 @@ import org.ekstep.genieservices.commons.bean.ContentDeleteResponse;
 import org.ekstep.genieservices.commons.bean.ContentDetailsRequest;
 import org.ekstep.genieservices.commons.bean.ContentExportRequest;
 import org.ekstep.genieservices.commons.bean.ContentExportResponse;
+import org.ekstep.genieservices.commons.bean.ContentFeedback;
 import org.ekstep.genieservices.commons.bean.ContentFilterCriteria;
 import org.ekstep.genieservices.commons.bean.ContentImport;
 import org.ekstep.genieservices.commons.bean.ContentImportRequest;
 import org.ekstep.genieservices.commons.bean.ContentImportResponse;
 import org.ekstep.genieservices.commons.bean.EcarImportRequest;
+import org.ekstep.genieservices.commons.bean.FlagContentRequest;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.bean.SunbirdContentSearchCriteria;
 import org.ekstep.genieservices.commons.bean.SunbirdContentSearchResult;
 import org.ekstep.genieservices.commons.bean.enums.DownloadAction;
-import org.ekstep.genieservices.commons.bean.ContentFeedback;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.ekstep.genieservices.commons.utils.StringUtil;
 import org.json.JSONArray;
@@ -54,6 +55,7 @@ public class ContentHandler {
     private static final String TYPE_DELETE_CONTENTS = "deleteContent";
     private static final String TYPE_GET_SEARCH_CRITERIA_FROM_REQUEST = "getSearchCriteriaFromRequest";
     private static final String TYPE_SEND_FEEDBACK = "sendFeedback";
+    private static final String TYPE_FLAG_CONTENT = "flagContent";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -86,6 +88,8 @@ public class ContentHandler {
                 getSearchCriteriaFromRequest(args, callbackContext);
             } else if (type.equals(TYPE_SEND_FEEDBACK)) {
                 sendFeedback(args, callbackContext);
+            } else if (type.equals(TYPE_FLAG_CONTENT)) {
+                flagContent(args, callbackContext);
             }
 
         } catch (JSONException e) {
@@ -347,7 +351,7 @@ public class ContentHandler {
         }
 
         Map<String, Object> searchMap = null;
-        if(requestMap != null && !requestMap.isEmpty()) {
+        if (requestMap != null && !requestMap.isEmpty()) {
             searchMap = (Map<String, Object>) requestMap.get("request");
         }
 
@@ -375,6 +379,25 @@ public class ContentHandler {
                 callbackContext.error(GsonUtil.toJson(genieResponse));
             }
         });
+    }
+
+    private static void flagContent(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+        final String requestJson = args.getString(1);
+
+        FlagContentRequest.Builder builder = GsonUtil.fromJson(requestJson, FlagContentRequest.Builder.class);
+
+        GenieService.getAsyncService().getContentService().flagContent(builder.build(),
+                new IResponseHandler<Void>() {
+                    @Override
+                    public void onSuccess(GenieResponse<Void> genieResponse) {
+                        callbackContext.success(GsonUtil.toJson(genieResponse));
+                    }
+
+                    @Override
+                    public void onError(GenieResponse<Void> genieResponse) {
+                        callbackContext.error(GsonUtil.toJson(genieResponse));
+                    }
+                });
     }
 
 }
