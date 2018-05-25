@@ -23,6 +23,10 @@ var genieSdkUtil = {
         exec(success, error, PLUGIN_NAME, this.action(), ["getBuildConfigParam",param]);
       },
 
+    decode: function (encodedString, flag, success, error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["decode",encodedString,flag]);
+      },
+
     action: function () {
         return "genieSdkUtil";
     }
