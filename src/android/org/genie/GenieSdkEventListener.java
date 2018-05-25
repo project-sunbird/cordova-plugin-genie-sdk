@@ -74,10 +74,21 @@ public class GenieSdkEventListener {
         mCallback.sendPluginResult(pluginResult);
     }
 
+    @Subscribe()
+    public void onLogout(String logout)
+            throws InterruptedException {
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK,
+                mGson.toJson(new EventResponse(EventResponse.TYPE_LOGOUT, logout)));
+        pluginResult.setKeepCallback(true);
+
+        mCallback.sendPluginResult(pluginResult);
+    }
+
     public class EventResponse {
       public static final String TYPE_CONTENT_IMPORT_RESPONSE = "contentImport";
       public static final String TYPE_CONTENT_IMPORT_PROGRESS = "contentImportProgress";
       public static final String TYPE_DOWNLOAD_PRGORESS = "downloadProgress";
+      public static final String TYPE_LOGOUT = "logout";
 
       public final String type;
       public final Object data;
