@@ -20,11 +20,13 @@ var course = {
         exec(success, error, PLUGIN_NAME, this.action(), ["getCourseBatches", requestJson]);
     },
 
+    getBatchDetails: function (requestJson, success, error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["getBatchDetails", requestJson]);
+    },
+
     action: function () {
         return "course";
     }
-
 };
 
 module.exports = course;
-

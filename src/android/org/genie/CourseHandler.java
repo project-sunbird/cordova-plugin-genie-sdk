@@ -3,6 +3,8 @@ package org.genie;
 import org.apache.cordova.CallbackContext;
 import org.ekstep.genieservices.GenieService;
 import org.ekstep.genieservices.commons.IResponseHandler;
+import org.ekstep.genieservices.commons.bean.Batch;
+import org.ekstep.genieservices.commons.bean.BatchDetailsRequest;
 import org.ekstep.genieservices.commons.bean.CourseBatchesRequest;
 import org.ekstep.genieservices.commons.bean.CourseBatchesResponse;
 import org.ekstep.genieservices.commons.bean.EnrollCourseRequest;
@@ -25,6 +27,7 @@ public class CourseHandler {
     private static final String TYPE_ENROLL_COURSE = "enrollCourse";
     private static final String TYPE_UPDATE_CONTENT_STATE = "updateContentState";
     private static final String TYPE_GET_COURSE_BATCHES = "getCourseBatches";
+    private static final String TYPE_GET_BATCH_DETAILS = "getBatchDetails";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -37,6 +40,8 @@ public class CourseHandler {
                 updateContentState(args, callbackContext);
             } else if (type.equals(TYPE_GET_COURSE_BATCHES)) {
                 getCourseBatches(args, callbackContext);
+            } else if (type.equals(TYPE_GET_BATCH_DETAILS)) {
+                getBatchDetails(args, callbackContext);
             }
 
         } catch (JSONException e) {
@@ -47,8 +52,7 @@ public class CourseHandler {
     private static void getEnrolledCourses(JSONArray args, final CallbackContext callbackContext) throws JSONException {
         String requestJson = args.getString(1);
 
-        EnrolledCoursesRequest.Builder builder = GsonUtil.fromJson(requestJson,
-                EnrolledCoursesRequest.Builder.class);
+        EnrolledCoursesRequest.Builder builder = GsonUtil.fromJson(requestJson, EnrolledCoursesRequest.Builder.class);
 
         GenieService.getAsyncService().getCourseService().getEnrolledCourses(builder.build(),
                 new IResponseHandler<EnrolledCoursesResponse>() {
@@ -67,9 +71,8 @@ public class CourseHandler {
     private static void enrollCourse(JSONArray args, final CallbackContext callbackContext) throws JSONException {
         String requestJson = args.getString(1);
 
-        EnrollCourseRequest.Builder builder = GsonUtil.fromJson(requestJson,
-                EnrollCourseRequest.Builder.class);
-        
+        EnrollCourseRequest.Builder builder = GsonUtil.fromJson(requestJson, EnrollCourseRequest.Builder.class);
+
         GenieService.getAsyncService().getCourseService().enrollCourse(builder.build(), new IResponseHandler<Void>() {
             @Override
             public void onSuccess(GenieResponse<Void> genieResponse) {
@@ -86,9 +89,8 @@ public class CourseHandler {
     private static void updateContentState(JSONArray args, final CallbackContext callbackContext) throws JSONException {
         String requestJson = args.getString(1);
 
-        UpdateContentStateRequest.Builder builder = GsonUtil.fromJson(requestJson,
-                UpdateContentStateRequest.Builder.class);
-        
+        UpdateContentStateRequest.Builder builder = GsonUtil.fromJson(requestJson, UpdateContentStateRequest.Builder.class);
+
         GenieService.getAsyncService().getCourseService().updateContentState(builder.build(), new IResponseHandler<Void>() {
             @Override
             public void onSuccess(GenieResponse<Void> genieResponse) {
@@ -105,9 +107,8 @@ public class CourseHandler {
     private static void getCourseBatches(JSONArray args, final CallbackContext callbackContext) throws JSONException {
         String requestJson = args.getString(1);
 
-        CourseBatchesRequest.Builder builder = GsonUtil.fromJson(requestJson,
-                CourseBatchesRequest.Builder.class);
-        
+        CourseBatchesRequest.Builder builder = GsonUtil.fromJson(requestJson, CourseBatchesRequest.Builder.class);
+
         GenieService.getAsyncService().getCourseService().getCourseBatches(builder.build(),
                 new IResponseHandler<CourseBatchesResponse>() {
                     @Override
@@ -117,6 +118,25 @@ public class CourseHandler {
 
                     @Override
                     public void onError(GenieResponse<CourseBatchesResponse> genieResponse) {
+                        callbackContext.error(GsonUtil.toJson(genieResponse));
+                    }
+                });
+    }
+
+    private static void getBatchDetails(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+        String requestJson = args.getString(1);
+
+        BatchDetailsRequest.Builder builder = GsonUtil.fromJson(requestJson, BatchDetailsRequest.Builder.class);
+
+        GenieService.getAsyncService().getCourseService().getBatchDetails(builder.build(),
+                new IResponseHandler<Batch>() {
+                    @Override
+                    public void onSuccess(GenieResponse<Batch> genieResponse) {
+                        callbackContext.success(GsonUtil.toJson(genieResponse));
+                    }
+
+                    @Override
+                    public void onError(GenieResponse<Batch> genieResponse) {
                         callbackContext.error(GsonUtil.toJson(genieResponse));
                     }
                 });
