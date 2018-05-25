@@ -9,12 +9,16 @@ import org.ekstep.genieservices.auth.AbstractAuthSessionImpl;
 import org.ekstep.genieservices.commons.GenieResponseBuilder;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.bean.Session;
+import org.ekstep.genieservices.commons.utils.Base64Util;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.ekstep.genieservices.eventbus.EventBus;
 import org.ekstep.genieservices.utils.BuildConfigUtil;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -90,6 +94,7 @@ public class KeycloakOAuthSessionService extends AbstractAuthSessionImpl {
             Map<String, Object> response = invokeAPI(formData);
             if (response != null) {
                 Session session = GsonUtil.fromMap(response, Session.class);
+                session.setUserToken(parseUserTokenFromAccessToken(session.getAccessToken()));
                 GenieService.getService().getAuthSession().startSession(session);
                 genieResponse = GenieResponseBuilder.getSuccessResponse(ServiceConstants.SUCCESS_RESPONSE);
                 genieResponse.setResult(new HashMap<>());
@@ -104,6 +109,28 @@ public class KeycloakOAuthSessionService extends AbstractAuthSessionImpl {
 
         return genieResponse;
 
+    }
+
+    public  String parseUserTokenFromAccessToken(String userAccessToken) {
+        String value = userAccessToken.substring(userAccessToken.indexOf("."), userAccessToken.lastIndexOf("."));
+        String userToken = null;
+        JSONObject jo = null;
+        try {
+            jo = new JSONObject(decodeBase64(value));
+            userToken = jo.get("sub").toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return userToken;
+    }
+
+    public static String decodeBase64(String data) throws UnsupportedEncodingException {
+        byte[] dataText = Base64Util.decode(data, Base64Util.URL_SAFE);
+        String text = new String(dataText, "UTF-8");
+        return text;
     }
 
     private Map<String, Object> invokeAPI(Map<String, String> formData) throws IOException {
