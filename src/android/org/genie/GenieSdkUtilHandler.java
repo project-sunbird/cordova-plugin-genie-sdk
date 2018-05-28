@@ -3,9 +3,12 @@ package org.genie;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.ekstep.genieservices.GenieService;
+import org.ekstep.genieservices.commons.utils.Base64Util;
 import org.ekstep.genieservices.utils.BuildConfigUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.io.UnsupportedEncodingException;
 
 public class GenieSdkUtilHandler {
 
@@ -14,6 +17,7 @@ public class GenieSdkUtilHandler {
     private static final String TYPE_IS_CONNECTED = "isConnected";
     private static final String TYPE_IS_CONNECTED_OVER_WIFI = "isConnectedOverWifi";
     private static final String TYPE_GET_BUILD_CONFIG_PARAM = "getBuildConfigParam";
+    private static final String TYPE_DECODE = "decode";
 
     public static void handle(CordovaInterface cordova, JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -29,6 +33,8 @@ public class GenieSdkUtilHandler {
                 isConnectedOverWifi(callbackContext);
             } else if (type.equals(TYPE_GET_BUILD_CONFIG_PARAM)) {
                 getBuildConfigParam(cordova, args, callbackContext);
+            } else if (type.equals(TYPE_DECODE)) {
+                decode(callbackContext, args);
             }
 
         } catch (JSONException e) {
@@ -60,5 +66,18 @@ public class GenieSdkUtilHandler {
         String param = args.getString(1);
         String value = BuildConfigUtil.getBuildConfigValue(cordova.getContext().getApplicationInfo().packageName, param).toString();
         callbackContext.success(value);
+    }
+
+    private static void decode(CallbackContext callbackContext, JSONArray args) throws JSONException {
+        String encodedData = args.getString(1);
+        int flag = args.getInt(2);
+        try {
+            byte[] decodedByteArray = Base64Util.decode(encodedData.getBytes("UTF-8"), flag);
+            String decodedString = new String(decodedByteArray);
+            callbackContext.success(decodedString);
+        } catch (UnsupportedEncodingException e) {
+            callbackContext.error("FAILED");
+        }
+
     }
 }
