@@ -43,6 +43,7 @@ public class UserProfileHandler {
     private static final String TYPE_SET_PROFILE_VISIBILITY = "setProfileVisibility";
     private static final String TYPE_UPLOAD_FILE = "uploadFile";
     private static final String TYPE_UPDATE_USER_INFO = "updateUserInfo";
+    private static final String TYPE_ADD_CONTENT_ACCESS = "addContentAccess";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -63,6 +64,8 @@ public class UserProfileHandler {
                 uploadFile(args, callbackContext);
             } else if (type.equalsIgnoreCase(TYPE_UPDATE_USER_INFO)) {
                 updateUserInfo(args, callbackContext);
+            }else if (type.equalsIgnoreCase(TYPE_ADD_CONTENT_ACCESS)) {
+                addContentAccess(args, callbackContext);
             }
         } catch (JSONException e) {
             e.printStackTrace();
