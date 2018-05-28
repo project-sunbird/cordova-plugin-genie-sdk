@@ -251,4 +251,24 @@ public class UserProfileHandler {
                     }
                 });
     }
+
+     /**
+     * addContentAccess
+     */
+    private static void addContentAccess(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+        final String requestJson = args.getString(1);
+        ContentAccess contentAccess = GsonUtil.fromJson(requestJson, ContentAccess.class);
+        GenieService.getAsyncService().getUserService().addContentAccess(contentAccess,
+                new IResponseHandler<Void>() {
+                    @Override
+                    public void onSuccess(GenieResponse<Void> genieResponse) {
+                        callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
+                    }
+
+                    @Override
+                    public void onError(GenieResponse<Void> genieResponse) {
+                        callbackContext.error(GsonUtil.toJson(genieResponse.getError()));
+                    }
+                });
+    }
 }
