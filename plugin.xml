@@ -56,6 +56,9 @@
     <js-module src="www/genieSdkUtil.js" name="genieSdkUtil">
         <clobbers target="genieSdkUtil" />
     </js-module>
+    <js-module src="www/form.js" name="form">
+        <clobbers target="form" />
+    </js-module>
     <!-- android -->
     <platform name="android">
 
