@@ -14,6 +14,7 @@ var announcement = require("./announcement");
 var preferences = require('./preferences');
 var genieSdkUtil = require("./genieSdkUtil");
 var share = require("./share");
+var form = require("./form");
 
 var GenieSDK = {
   telemetry: telemetry,
@@ -31,6 +32,7 @@ var GenieSDK = {
   preferences: preferences,
   genieSdkUtil: genieSdkUtil,
   share: share,
+  form: form
 };
 
 
