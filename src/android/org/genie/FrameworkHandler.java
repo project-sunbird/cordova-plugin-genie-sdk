@@ -7,11 +7,11 @@ import org.ekstep.genieservices.commons.bean.Framework;
 import org.ekstep.genieservices.commons.bean.FrameworkDetailsRequest;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
+import org.ekstep.genieservices.commons.utils.StringUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +43,6 @@ public class FrameworkHandler {
         final String requestJson = args.getString(1);
 
         FrameworkDetailsRequest.Builder frameworkDetailsRequest = GsonUtil.fromJson(requestJson, FrameworkDetailsRequest.Builder.class);
-        frameworkDetailsRequest.defaultFrameworkDetails();
 
         GenieService.getAsyncService().getFrameworkService().getFrameworkDetails(frameworkDetailsRequest.build(), new IResponseHandler<Framework>() {
             @Override
@@ -60,9 +59,24 @@ public class FrameworkHandler {
     }
 
     private static void getCategoryData(JSONArray args, CallbackContext callbackContext) throws JSONException {
+        final String requestJson = args.getString(1);
+        Map<String, Object> requestMap = GsonUtil.fromJson(requestJson, Map.class);
+        String frameworkId = (String) requestMap.get("frameworkId");
+
+        String cachedFrameworkId = null;
         if (framework == null) {
+            Map<String, Object> cachedFrameworkMap = GsonUtil.fromJson(framework.getFramework(), Map.class);
+            cachedFrameworkId = (String) cachedFrameworkMap.get("identifier");
+        }
+
+        if (cachedFrameworkId == null || !cachedFrameworkId.equals(frameworkId)) {
             FrameworkDetailsRequest.Builder builder = new FrameworkDetailsRequest.Builder();
-            builder.defaultFrameworkDetails();
+            if (!StringUtil.isNullOrEmpty(frameworkId)) {
+                builder.forFramework(frameworkId);
+            } else {
+                builder.defaultFrameworkDetails();
+            }
+
             GenieResponse<Framework> genieResponse = GenieService.getService().getFrameworkService().getFrameworkDetails(builder.build());
             if (!genieResponse.getStatus()) {
                 callbackContext.error(GsonUtil.toJson(genieResponse));
@@ -71,11 +85,6 @@ public class FrameworkHandler {
 
             framework = genieResponse.getResult();
         }
-
-        final String requestJson = args.getString(1);
-        Map<String, Object> requestMap = GsonUtil.fromJson(requestJson, Map.class);
-        String currentCategory = (String) requestMap.get("currentCategory");
-
 
         if (requestMap.containsKey("prevCategory")
                 && requestMap.containsKey("selectedCode")) {
@@ -117,6 +126,7 @@ public class FrameworkHandler {
             }
         }
 
+        String currentCategory = (String) requestMap.get("currentCategory");
         Object categoryData = null;
         Map<String, Object> frameworkMap = GsonUtil.fromJson(framework.getFramework(), Map.class);
         if (frameworkMap.containsKey("categories")) {
