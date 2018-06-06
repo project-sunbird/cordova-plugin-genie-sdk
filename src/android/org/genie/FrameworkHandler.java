@@ -86,6 +86,9 @@ public class FrameworkHandler {
             framework = genieResponse.getResult();
         }
 
+        String currentCategory = (String) requestMap.get("currentCategory");
+
+
         if (requestMap.containsKey("prevCategory")
                 && requestMap.containsKey("selectedCode")) {
             String prevCategory = (String) requestMap.get("prevCategory");
@@ -113,7 +116,15 @@ public class FrameworkHandler {
                         List<Map> associations = (List<Map>) prevCategoryValue.get("associations");
 
                         if (associations != null && associations.size() > 0) {
-                            allAssociations.addAll(associations);
+                            /*allAssociations.addAll(associations);*/
+                            for (Map association: associations) {
+                                if (association.containsKey("category")) {
+                                    String categoryValue = (String) association.get("category");
+                                    if (categoryValue.equalsIgnoreCase(currentCategory)) {
+                                        allAssociations.add(association);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -126,7 +137,6 @@ public class FrameworkHandler {
             }
         }
 
-        String currentCategory = (String) requestMap.get("currentCategory");
         Object categoryData = null;
         Map<String, Object> frameworkMap = GsonUtil.fromJson(framework.getFramework(), Map.class);
         if (frameworkMap.containsKey("categories")) {
