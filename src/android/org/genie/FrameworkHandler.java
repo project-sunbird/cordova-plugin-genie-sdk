@@ -64,7 +64,7 @@ public class FrameworkHandler {
         String frameworkId = (String) requestMap.get("frameworkId");
 
         String cachedFrameworkId = null;
-        if (framework == null) {
+        if (framework != null) {
             Map<String, Object> cachedFrameworkMap = GsonUtil.fromJson(framework.getFramework(), Map.class);
             cachedFrameworkId = (String) cachedFrameworkMap.get("identifier");
         }
