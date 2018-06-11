@@ -1,7 +1,5 @@
 package org.genie;
 
-import android.preference.PreferenceManager;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -24,7 +22,6 @@ import org.ekstep.genieservices.commons.bean.UserProfileSkillsRequest;
 import org.ekstep.genieservices.commons.bean.UserSearchCriteria;
 import org.ekstep.genieservices.commons.bean.UserSearchResult;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
-import org.ekstep.genieservices.commons.utils.StringUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,7 +62,7 @@ public class UserProfileHandler {
                 uploadFile(args, callbackContext);
             } else if (type.equalsIgnoreCase(TYPE_UPDATE_USER_INFO)) {
                 updateUserInfo(args, callbackContext);
-            }else if (type.equalsIgnoreCase(TYPE_ADD_CONTENT_ACCESS)) {
+            } else if (type.equalsIgnoreCase(TYPE_ADD_CONTENT_ACCESS)) {
                 addContentAccess(args, callbackContext);
             }
         } catch (JSONException e) {
@@ -256,7 +253,7 @@ public class UserProfileHandler {
                 });
     }
 
-     /**
+    /**
      * addContentAccess
      */
     private static void addContentAccess(JSONArray args, final CallbackContext callbackContext) throws JSONException {

@@ -36,19 +36,15 @@ public class AuthHandler {
                 endSession();
             } else if (type.equals(TYPE_VALID_SESSION)) {
                 getSessionData(callbackContext);
-            }
-            else if (type.equals(TYPE_CREATE_SESSION)) {
-                createSession(args,callbackContext);
-            }
-            else if (type.equals(TYPE_REFRESH_SESSION)) {
-                createSession(args,callbackContext);
+            } else if (type.equals(TYPE_CREATE_SESSION)) {
+                createSession(args, callbackContext);
+            } else if (type.equals(TYPE_REFRESH_SESSION)) {
+                createSession(args, callbackContext);
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
     }
 
     private static void getSessionData(final CallbackContext callbackContext) {
@@ -58,6 +54,8 @@ public class AuthHandler {
 
     private static void endSession() {
         GenieService.getService().getAuthSession().endSession();
+
+        GenieService.getService().getKeyStore().putString("channelId", null);
     }
 
     private static void startSession(JSONArray args) throws JSONException {
@@ -93,6 +91,5 @@ public class AuthHandler {
                 callbackContext.error(genieResponse.getMessage());
             }
         });
-
     }
 }
