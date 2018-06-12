@@ -56,6 +56,7 @@ public class AuthHandler {
         GenieService.getService().getAuthSession().endSession();
 
         GenieService.getService().getKeyStore().putString("channelId", null);
+        SDKParams.setParams();
     }
 
     private static void startSession(JSONArray args) throws JSONException {
