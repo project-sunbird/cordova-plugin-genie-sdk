@@ -11,6 +11,10 @@ var framework = {
         exec(success, error, PLUGIN_NAME, this.action(), ["getCategoryData", requestJson]);
     },
 
+    persistFrameworkDetails: function(requestJson) {
+        exec(null, null, PLUGIN_NAME, this.action(), ["persistFrameworkDetails", requestJson]);
+    },
+
     action: function () {
         return "framework";
     }
