@@ -1,6 +1,7 @@
 package org.sunbird.sync;
 
 import org.ekstep.genieservices.GenieService;
+import org.ekstep.genieservices.ServiceConstants;
 import org.ekstep.genieservices.async.TelemetryService;
 import org.ekstep.genieservices.commons.IResponseHandler;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
@@ -79,7 +80,10 @@ public class TelemetrySyncOperation {
                 @Override
                 public void onError(GenieResponse<SyncStat> genieResponse) {
                     mIsSyncInProgress = false;
-                    saveTelemetry(buildErrorEvent("auto-sync-failed", "auto-sync-failed"));
+                    String error = genieResponse.getError();
+                    if (error != null && !error.equalsIgnoreCase(ServiceConstants.ErrorCode.THRESHOLD_LIMIT_NOT_REACHED)) {
+                        saveTelemetry(buildErrorEvent("auto-sync-failed", "auto-sync-failed"));
+                    }
 
                 }
             });
