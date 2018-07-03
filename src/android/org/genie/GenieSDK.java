@@ -63,7 +63,10 @@ public class GenieSDK extends CordovaPlugin {
             ShareHandler.handle(args, cordova, callbackContext);
         }else if (action.equals("form")) {
             FormHandler.handle(args, callbackContext);
+        }else if (action.equals("dialcode")) {
+            DialCodeHandler.handle(args, callbackContext);
         }
+
         return true;
     }
 
