@@ -20,14 +20,25 @@ var profile = {
     exec(success, error, PLUGIN_NAME, this.action(), ["getCurrentUser"]);
   },
 
-  setCurrentProfile: function (isGuestMode,requestJson, success, error) {
-    exec(success, error, PLUGIN_NAME, this.action(), ["setCurrentProfile", isGuestMode,requestJson]);
+  setCurrentProfile: function (isGuestMode, requestJson, success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["setCurrentProfile", isGuestMode, requestJson]);
   },
 
   setAnonymousUser: function (success, error) {
     exec(success, error, PLUGIN_NAME, this.action(), ["setAnonymousUser"]);
   },
-  
+
+  addContentAccess: function (requestJson, success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["addContentAccess", requestJson]);
+  },
+
+  getAllUserProfile: function (success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["getAllUserProfile"]);
+  },
+
+  deleteUser: function (requestJson, success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["deleteUser", requestJson]);
+  },
 
   action: function () {
     return "profile";

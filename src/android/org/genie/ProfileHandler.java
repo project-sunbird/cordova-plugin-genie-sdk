@@ -3,6 +3,7 @@ package org.genie;
 import org.apache.cordova.CallbackContext;
 import org.ekstep.genieservices.GenieService;
 import org.ekstep.genieservices.commons.IResponseHandler;
+import org.ekstep.genieservices.commons.bean.ContentAccess;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.bean.Profile;
 import org.ekstep.genieservices.commons.utils.CollectionUtil;
@@ -25,6 +26,9 @@ public class ProfileHandler {
     private static final String TYPE_GET_CURRENT_USER = "getCurrentUser";
     private static final String TYPE_SET_CURRENT_PROFILE = "setCurrentProfile";
     private static final String TYPE_SET_ANONYMOUS_USER = "setAnonymousUser";
+    private static final String TYPE_ADD_CONTENT_ACCESS = "addContentAccess";
+    private static final String TYPE_GET_ALL_USER_PROFILE = "getAllUserProfile";
+    private static final String TYPE_DELETE_USER = "deleteUser";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -38,9 +42,15 @@ public class ProfileHandler {
             } else if (type.equals(TYPE_GET_CURRENT_USER)) {
                 getCurrentUser(callbackContext);
             } else if (type.equals(TYPE_SET_CURRENT_PROFILE)) {
-                setCurrentProfile(args,callbackContext);
+                setCurrentProfile(args, callbackContext);
             } else if (type.equals(TYPE_SET_ANONYMOUS_USER)) {
                 setAnonymousUser(callbackContext);
+            } else if (type.equalsIgnoreCase(TYPE_ADD_CONTENT_ACCESS)) {
+                addContentAccess(args, callbackContext);
+            } else if (type.equalsIgnoreCase(TYPE_GET_ALL_USER_PROFILE)) {
+                getAllUserProfile(callbackContext);
+            } else if (type.equalsIgnoreCase(TYPE_DELETE_USER)) {
+                deleteUser(args, callbackContext);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -172,7 +182,7 @@ public class ProfileHandler {
         }
     }
 
-    private static void setAnonymousUser(final CallbackContext callbackContext) throws JSONException{
+    private static void setAnonymousUser(final CallbackContext callbackContext) throws JSONException {
         GenieService.getAsyncService().getUserService().setAnonymousUser(new IResponseHandler<String>() {
             @Override
             public void onSuccess(GenieResponse<String> genieResponse) {
@@ -214,4 +224,50 @@ public class ProfileHandler {
         });
     }
 
+
+    private static void addContentAccess(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+        final String requestJson = args.getString(1);
+        ContentAccess contentAccess = GsonUtil.fromJson(requestJson, ContentAccess.class);
+        GenieService.getAsyncService().getUserService().addContentAccess(contentAccess,
+                new IResponseHandler<Void>() {
+                    @Override
+                    public void onSuccess(GenieResponse<Void> genieResponse) {
+                        callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
+                    }
+
+                    @Override
+                    public void onError(GenieResponse<Void> genieResponse) {
+                        callbackContext.error(GsonUtil.toJson(genieResponse.getError()));
+                    }
+                });
+    }
+
+    private static void getAllUserProfile(final CallbackContext callbackContext) throws JSONException {
+        GenieService.getAsyncService().getUserService().getAllUserProfile(new IResponseHandler<List<Profile>>() {
+            @Override
+            public void onSuccess(GenieResponse<List<Profile>> genieResponse) {
+                callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
+            }
+
+            @Override
+            public void onError(GenieResponse<List<Profile>> genieResponse) {
+                callbackContext.error(GsonUtil.toJson(genieResponse.getResult()));
+            }
+        });
+    }
+
+    private static void deleteUser(JSONArray args, CallbackContext callbackContext) throws JSONException {
+        String uid = args.getString(1);
+        GenieService.getAsyncService().getUserService().deleteUser(uid, new IResponseHandler<Void>() {
+            @Override
+            public void onSuccess(GenieResponse<Void> genieResponse) {
+                callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
+            }
+
+            @Override
+            public void onError(GenieResponse<Void> genieResponse) {
+                callbackContext.error(genieResponse.getError());
+            }
+        });
+    }
 }
