@@ -69,25 +69,27 @@ public class UserProfileHandler {
     private static void updateUserInfo(JSONArray args, final CallbackContext callbackContext) throws JSONException {
         String requestJson = args.getString(1);
 
-        UpdateUserInfoRequest request = GsonUtil.fromJson(requestJson, UpdateUserInfoRequest.class);
-        GenieService.getAsyncService().getUserProfileService().updateUserInfo(request, new IResponseHandler<Void>() {
-            @Override
-            public void onSuccess(GenieResponse<Void> genieResponse) {
-                callbackContext.success(GsonUtil.toJson(genieResponse));
-            }
+        UpdateUserInfoRequest.Builder request = GsonUtil.fromJson(requestJson, UpdateUserInfoRequest.Builder.class);
+        GenieService.getAsyncService().getUserProfileService().updateUserInfo(request.build(),
+                new IResponseHandler<Void>() {
+                    @Override
+                    public void onSuccess(GenieResponse<Void> genieResponse) {
+                        callbackContext.success(GsonUtil.toJson(genieResponse));
+                    }
 
-            @Override
-            public void onError(GenieResponse<Void> genieResponse) {
-                callbackContext.error(GsonUtil.toJson(genieResponse));
-            }
-        });
+                    @Override
+                    public void onError(GenieResponse<Void> genieResponse) {
+                        callbackContext.error(GsonUtil.toJson(genieResponse));
+                    }
+                });
     }
 
     private static void getUserProfileDetails(JSONArray args, final CallbackContext callbackContext)
             throws JSONException {
         String requestJson = args.getString(1);
-        UserProfileDetailsRequest request = GsonUtil.fromJson(requestJson, UserProfileDetailsRequest.class);
-        GenieService.getAsyncService().getUserProfileService().getUserProfileDetails(request,
+        UserProfileDetailsRequest.Builder request = GsonUtil.fromJson(requestJson,
+                UserProfileDetailsRequest.Builder.class);
+        GenieService.getAsyncService().getUserProfileService().getUserProfileDetails(request.build(),
                 new IResponseHandler<UserProfile>() {
                     @Override
                     public void onSuccess(GenieResponse<UserProfile> genieResponse) {
@@ -109,7 +111,6 @@ public class UserProfileHandler {
                     }
                 });
     }
-
 
     /**
      * get TenantInfo
@@ -189,17 +190,18 @@ public class UserProfileHandler {
 
         EndorseOrAddSkillRequest.Builder builder = gson.fromJson(requestJson, EndorseOrAddSkillRequest.Builder.class);
 
-        GenieService.getAsyncService().getUserProfileService().endorseOrAddSkill(builder.build(), new IResponseHandler<Void>() {
-            @Override
-            public void onSuccess(GenieResponse<Void> genieResponse) {
-                callbackContext.success(GsonUtil.toJson(genieResponse));
-            }
+        GenieService.getAsyncService().getUserProfileService().endorseOrAddSkill(builder.build(),
+                new IResponseHandler<Void>() {
+                    @Override
+                    public void onSuccess(GenieResponse<Void> genieResponse) {
+                        callbackContext.success(GsonUtil.toJson(genieResponse));
+                    }
 
-            @Override
-            public void onError(GenieResponse<Void> genieResponse) {
-                callbackContext.error(GsonUtil.toJson(genieResponse));
-            }
-        });
+                    @Override
+                    public void onError(GenieResponse<Void> genieResponse) {
+                        callbackContext.error(GsonUtil.toJson(genieResponse));
+                    }
+                });
     }
 
     /**
@@ -248,4 +250,5 @@ public class UserProfileHandler {
                     }
                 });
     }
+
 }
