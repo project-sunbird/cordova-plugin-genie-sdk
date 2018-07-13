@@ -59,6 +59,9 @@
     <js-module src="www/form.js" name="form">
         <clobbers target="form" />
     </js-module>
+     <js-module src="www/dialcode.js" name="dialcode">
+        <clobbers target="dialcode" />
+    </js-module>
     <!-- android -->
     <platform name="android">
 
@@ -89,7 +92,8 @@
       <source-file src="src/android/org/genie/KeycloakOAuthSessionService.java" target-dir="src/org/genie/" />
       <source-file src="src/android/org/genie/SharedPreferencesHandler.java" target-dir="src/org/genie/" />
       <source-file src="src/android/org/genie/GenieSdkUtilHandler.java" target-dir="src/org/genie/" />
-       <source-file src="src/android/org/genie/FormHandler.java" target-dir="src/org/genie" />
+      <source-file src="src/android/org/genie/FormHandler.java" target-dir="src/org/genie" />
+      <source-file src="src/android/org/genie/DialCodeHandler.java" target-dir="src/org/genie" />
       <source-file src="src/android/org/sunbird/SunbirdApplication.java" target-dir="src/org/sunbird/" />
       <source-file src="src/android/org/sunbird/ForegroundService.java" target-dir="src/org/sunbird/" />
       <source-file src="src/android/org/genie/SDKParams.java" target-dir="src/org/genie/" />

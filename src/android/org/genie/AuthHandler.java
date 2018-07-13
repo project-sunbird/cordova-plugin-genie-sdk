@@ -55,7 +55,9 @@ public class AuthHandler {
     private static void endSession() {
         GenieService.getService().getAuthSession().endSession();
 
-        GenieService.getService().getKeyStore().putString("channelId", null);
+        String defaultChannel = GenieService.getService().getKeyStore().getString(ContentHandler.DEFAULT_CHANNEL_PREF_KEY, null);
+        GenieService.getService().getKeyStore().putString("channelId", defaultChannel);
+
         SDKParams.setParams();
     }
 
