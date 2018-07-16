@@ -59,6 +59,9 @@
     <js-module src="www/form.js" name="form">
         <clobbers target="form" />
     </js-module>
+    <js-module src="www/report.js" name="report">
+        <clobbers target="report" />
+    </js-module>
     <!-- android -->
     <platform name="android">
 
@@ -72,6 +75,7 @@
       <hook type="after_prepare" src="add_application_name.js" />
     
       <source-file src="src/android/org/genie/GenieSDK.java" target-dir="src/org/genie/" />
+      <source-file src="src/android/org/genie/ReportHandler.java" target-dir="src/org/genie/" />
       <source-file src="src/android/org/genie/ShareHandler.java" target-dir="src/org/genie/" />
       <source-file src="src/android/org/genie/TelemetryHandler.java" target-dir="src/org/genie/" />
       <source-file src="src/android/org/genie/ContentHandler.java" target-dir="src/org/genie/" />
