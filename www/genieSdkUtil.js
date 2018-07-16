@@ -27,6 +27,10 @@ var genieSdkUtil = {
         exec(success, error, PLUGIN_NAME, this.action(), ["decode",encodedString,flag]);
       },
 
+    openPlayStore: function(appId, success, error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["openPlayStore", appId]);
+    },
+
     action: function () {
         return "genieSdkUtil";
     }

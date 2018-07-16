@@ -1,5 +1,11 @@
 package org.genie;
 
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.ekstep.genieservices.GenieService;
@@ -18,6 +24,7 @@ public class GenieSdkUtilHandler {
     private static final String TYPE_IS_CONNECTED_OVER_WIFI = "isConnectedOverWifi";
     private static final String TYPE_GET_BUILD_CONFIG_PARAM = "getBuildConfigParam";
     private static final String TYPE_DECODE = "decode";
+    private static final String TYPE_OPEN_PLAY_STORE = "openPlayStore";
 
     public static void handle(CordovaInterface cordova, JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -35,6 +42,10 @@ public class GenieSdkUtilHandler {
                 getBuildConfigParam(cordova, args, callbackContext);
             } else if (type.equals(TYPE_DECODE)) {
                 decode(callbackContext, args);
+            } else if (type.equals(TYPE_OPEN_PLAY_STORE)) {
+                String appId = args.getString(1);
+                openGooglePlay(cordova, appId);
+                callbackContext.success();
             }
 
         } catch (JSONException e) {
@@ -80,4 +91,23 @@ public class GenieSdkUtilHandler {
         }
 
     }
+
+    /**
+     * Open the appId details on Google Play .
+     *
+     * @param appId
+     *            Application Id on Google Play.
+     *            E.g.: com.google.earth
+     */
+    private static void openGooglePlay(CordovaInterface cordova,String appId) {
+        try {
+            Context context = cordova.getActivity().getApplicationContext();
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appId));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } catch (ActivityNotFoundException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }
