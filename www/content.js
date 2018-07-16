@@ -16,8 +16,8 @@ var content = {
     exec(success, error, PLUGIN_NAME, this.action(), ["importContent", requestJson]);
   },
 
-  searchContent: function (requestJson, isFilterApplied, success, error) {
-    exec(success, error, PLUGIN_NAME, this.action(), ["searchContent", requestJson, isFilterApplied]);
+  searchContent: function (requestJson, isFilterApplied, isDialCodeSearch, isGuestUser, success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["searchContent", requestJson, isFilterApplied, isDialCodeSearch, isGuestUser]);
   },
 
   getAllLocalContents: function (requestJson, success, error) {
