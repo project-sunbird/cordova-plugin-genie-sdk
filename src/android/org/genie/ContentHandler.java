@@ -9,6 +9,7 @@ import org.ekstep.genieservices.GenieService;
 import org.ekstep.genieservices.commons.IResponseHandler;
 import org.ekstep.genieservices.commons.bean.ChildContentRequest;
 import org.ekstep.genieservices.commons.bean.Content;
+import org.ekstep.genieservices.commons.bean.ContentData;
 import org.ekstep.genieservices.commons.bean.ContentDeleteRequest;
 import org.ekstep.genieservices.commons.bean.ContentDeleteResponse;
 import org.ekstep.genieservices.commons.bean.ContentDetailsRequest;
@@ -19,6 +20,7 @@ import org.ekstep.genieservices.commons.bean.ContentFilterCriteria;
 import org.ekstep.genieservices.commons.bean.ContentImport;
 import org.ekstep.genieservices.commons.bean.ContentImportRequest;
 import org.ekstep.genieservices.commons.bean.ContentImportResponse;
+import org.ekstep.genieservices.commons.bean.DialCodeRequest;
 import org.ekstep.genieservices.commons.bean.EcarImportRequest;
 import org.ekstep.genieservices.commons.bean.FlagContentRequest;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
@@ -27,6 +29,7 @@ import org.ekstep.genieservices.commons.bean.SunbirdContentSearchResult;
 import org.ekstep.genieservices.commons.bean.enums.DownloadAction;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.ekstep.genieservices.commons.utils.StringUtil;
+import org.ekstep.genieservices.commons.utils.CollectionUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,6 +59,8 @@ public class ContentHandler {
     private static final String TYPE_GET_SEARCH_CRITERIA_FROM_REQUEST = "getSearchCriteriaFromRequest";
     private static final String TYPE_SEND_FEEDBACK = "sendFeedback";
     private static final String TYPE_FLAG_CONTENT = "flagContent";
+
+    public static final String DEFAULT_CHANNEL_PREF_KEY = "default_channel";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -169,6 +174,8 @@ public class ContentHandler {
     private static void searchContent(JSONArray args, final CallbackContext callbackContext) throws JSONException {
         final String requestJson = args.getString(1);
         final boolean isFilterApplied = args.getBoolean(2);
+        final boolean isDialCodeSearch = args.getBoolean(3);
+        final boolean isGuestUser = args.getBoolean(4);
 
         SunbirdContentSearchCriteria criteria;
         if (isFilterApplied) {
@@ -185,7 +192,39 @@ public class ContentHandler {
                 new IResponseHandler<SunbirdContentSearchResult>() {
                     @Override
                     public void onSuccess(GenieResponse<SunbirdContentSearchResult> genieResponse) {
-                        callbackContext.success(GsonUtil.toJson(genieResponse));
+                        String defaultChannel = GenieService.getService().getKeyStore().getString(DEFAULT_CHANNEL_PREF_KEY, null);
+                        if (StringUtil.isNullOrEmpty(defaultChannel) && isDialCodeSearch && isGuestUser) {
+                            if (genieResponse.getResult() != null) {
+                                List<ContentData> contentDataList = genieResponse.getResult().getContentDataList();
+                                if (!CollectionUtil.isNullOrEmpty(contentDataList)) {
+                                    ContentData contentData = contentDataList.get(0);
+                                    String channel = contentData.getChannel();
+                                    if(!StringUtil.isNullOrEmpty(channel)){
+                                        GenieService.getService().getKeyStore().putString("channelId", channel);
+                                        GenieService.getService().getKeyStore().putString(DEFAULT_CHANNEL_PREF_KEY, channel);
+                                        SDKParams.setParams();
+                                    }
+                                    else{
+                                        DialCodeRequest dialCodeRequest= new DialCodeRequest.Builder().
+                                                dialCode(criteria.getDialCodes()[0]).build();
+                                        getDialCode(dialCodeRequest);
+                                    }
+
+                                    callbackContext.success(GsonUtil.toJson(genieResponse));
+                                } else {
+                                    DialCodeRequest dialCodeRequest= new DialCodeRequest.Builder().
+                                            dialCode(criteria.getDialCodes()[0]).build();
+                                    getDialCode(dialCodeRequest);
+                                    callbackContext.success(GsonUtil.toJson(genieResponse));
+                                }
+                            }
+                            else{
+                                callbackContext.success(GsonUtil.toJson(genieResponse));
+                            }
+
+                        } else {
+                            callbackContext.success(GsonUtil.toJson(genieResponse));
+                        }
                     }
 
                     @Override
@@ -194,6 +233,30 @@ public class ContentHandler {
                     }
                 });
     }
+
+    private static void getDialCode(DialCodeRequest dialCodeRequest){
+        GenieService.getAsyncService().getDialCodeService().getDialCode(dialCodeRequest, new IResponseHandler<Map<String, Object>>() {
+            @Override
+            public void onSuccess(GenieResponse<Map<String, Object>> genieResponse) {
+                Map<String,Object> result = genieResponse.getResult();
+                if(result!=null && result.get("dialcode")!=null){
+                    Map<String,Object> dialcode = (Map<String,Object>)result.get("dialcode");
+                    String channel=String.valueOf(dialcode.get("channel"));
+                    if(!StringUtil.isNullOrEmpty(channel)){
+                        GenieService.getService().getKeyStore().putString("channelId", channel);
+                        GenieService.getService().getKeyStore().putString(DEFAULT_CHANNEL_PREF_KEY, channel);
+                        SDKParams.setParams();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(GenieResponse<Map<String, Object>> genieResponse) {
+
+            }
+        });
+    }
+
 
     private static void getAllLocalContents(JSONArray args, final CallbackContext callbackContext)
             throws JSONException {
