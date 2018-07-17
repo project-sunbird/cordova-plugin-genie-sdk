@@ -1,22 +1,11 @@
 package org.genie;
 
-import android.content.pm.PackageManager;
-import android.util.SparseArray;
-
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
-import org.ekstep.genieservices.GenieService;
-import org.ekstep.genieservices.commons.IResponseHandler;
-import org.ekstep.genieservices.commons.bean.GenieResponse;
-import org.ekstep.genieservices.commons.bean.SyncStat;
-import org.ekstep.genieservices.commons.bean.telemetry.Impression;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Random;
 
 /**
  * Created by souvikmondal on 8/1/18.
@@ -67,6 +56,8 @@ public class GenieSDK extends CordovaPlugin {
             ReportHandler.handle(args, callbackContext);
         } else if (action.equals("dialcode")) {
             DialCodeHandler.handle(args, callbackContext);
+        } else if (action.equals("group")) {
+            GroupHandler.handle(args, callbackContext);
         }
 
         return true;

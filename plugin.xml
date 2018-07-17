@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-    id="cordova-plugin-genie-sdk"
-    version="1.0.0">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-genie-sdk" version="1.0.0">
     <name>Cordova Plugin Template</name>
     <description></description>
     <license>MIT</license>
@@ -20,7 +18,7 @@
     <js-module src="www/auth.js" name="auth">
         <clobbers target="auth" />
     </js-module>
-        <js-module src="www/profile.js" name="profile">
+    <js-module src="www/profile.js" name="profile">
         <clobbers target="profile" />
     </js-module>
     <js-module src="www/userprofile.js" name="userprofile">
@@ -32,7 +30,7 @@
     <js-module src="www/event.js" name="event">
         <clobbers target="event" />
     </js-module>
-     <js-module src="www/downloadService.js" name="downloadService">
+    <js-module src="www/downloadService.js" name="downloadService">
         <clobbers target="downloadService" />
     </js-module>
     <js-module src="www/course.js" name="course">
@@ -65,44 +63,48 @@
     <js-module src="www/dialcode.js" name="dialcode">
         <clobbers target="dialcode" />
     </js-module>
+    <js-module src="www/group.js" name="group">
+        <clobbers target="group" />
+    </js-module>
     <!-- android -->
     <platform name="android">
 
-      <config-file target="res/xml/config.xml" parent="/*">
-        <feature name="GenieSDK">
-          <param name="android-package" value="org.genie.GenieSDK" />
-          <param name="onload" value="true" />
-        </feature>
-      </config-file>
-      
-      <hook type="after_prepare" src="add_application_name.js" />
-    
-      <source-file src="src/android/org/genie/GenieSDK.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/ReportHandler.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/ShareHandler.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/TelemetryHandler.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/ContentHandler.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/AuthHandler.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/ProfileHandler.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/UserProfileHandler.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/FrameworkHandler.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/GenieEventHandler.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/GenieSdkEventListener.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/DownloadService.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/CourseHandler.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/PageHandler.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/PermissionHandler.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/AnnouncementHandler.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/KeycloakOAuthSessionService.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/SharedPreferencesHandler.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/GenieSdkUtilHandler.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/genie/FormHandler.java" target-dir="src/org/genie" />
-      <source-file src="src/android/org/genie/DialCodeHandler.java" target-dir="src/org/genie" />
-      <source-file src="src/android/org/sunbird/SunbirdApplication.java" target-dir="src/org/sunbird/" />
-      <source-file src="src/android/org/sunbird/ForegroundService.java" target-dir="src/org/sunbird/" />
-      <source-file src="src/android/org/genie/SDKParams.java" target-dir="src/org/genie/" />
-      <source-file src="src/android/org/sunbird/sync/SyncConfiguration.java" target-dir="src/org/sunbird/sync" />
-      <source-file src="src/android/org/sunbird/sync/TelemetrySyncOperation.java" target-dir="src/org/sunbird/sync" />
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="GenieSDK">
+                <param name="android-package" value="org.genie.GenieSDK" />
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+
+        <hook type="after_prepare" src="add_application_name.js" />
+
+        <source-file src="src/android/org/genie/GenieSDK.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/ReportHandler.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/ShareHandler.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/TelemetryHandler.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/ContentHandler.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/AuthHandler.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/ProfileHandler.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/UserProfileHandler.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/FrameworkHandler.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/GenieEventHandler.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/GenieSdkEventListener.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/DownloadService.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/CourseHandler.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/PageHandler.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/PermissionHandler.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/AnnouncementHandler.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/KeycloakOAuthSessionService.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/SharedPreferencesHandler.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/GenieSdkUtilHandler.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/FormHandler.java" target-dir="src/org/genie" />
+        <source-file src="src/android/org/genie/DialCodeHandler.java" target-dir="src/org/genie" />
+        <source-file src="src/android/org/sunbird/SunbirdApplication.java" target-dir="src/org/sunbird/" />
+        <source-file src="src/android/org/sunbird/ForegroundService.java" target-dir="src/org/sunbird/" />
+        <source-file src="src/android/org/genie/SDKParams.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/genie/GroupHandler.java" target-dir="src/org/genie/" />
+        <source-file src="src/android/org/sunbird/sync/SyncConfiguration.java" target-dir="src/org/sunbird/sync" />
+        <source-file src="src/android/org/sunbird/sync/TelemetrySyncOperation.java" target-dir="src/org/sunbird/sync" />
 
 
     </platform>
