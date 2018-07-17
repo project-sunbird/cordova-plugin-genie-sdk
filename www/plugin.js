@@ -17,6 +17,7 @@ var share = require("./share");
 var form = require("./form");
 var report = require("./report");
 var dialcode = require("./dialcode");
+var group = require("./group");
 
 var GenieSDK = {
   telemetry: telemetry,
@@ -36,7 +37,8 @@ var GenieSDK = {
   share: share,
   form: form,
   report: report,
-  dialcode: dialcode
+  dialcode: dialcode,
+  group: group
 };
 
 
