@@ -1,11 +1,14 @@
 package org.genie;
 
+import android.text.TextUtils;
+
 import org.apache.cordova.CallbackContext;
 import org.ekstep.genieservices.GenieService;
 import org.ekstep.genieservices.commons.IResponseHandler;
 import org.ekstep.genieservices.commons.bean.ContentAccess;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.bean.Profile;
+import org.ekstep.genieservices.commons.bean.ProfileRequest;
 import org.ekstep.genieservices.commons.utils.CollectionUtil;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.ekstep.genieservices.commons.utils.StringUtil;
@@ -48,7 +51,7 @@ public class ProfileHandler {
             } else if (type.equalsIgnoreCase(TYPE_ADD_CONTENT_ACCESS)) {
                 addContentAccess(args, callbackContext);
             } else if (type.equalsIgnoreCase(TYPE_GET_ALL_USER_PROFILE)) {
-                getAllUserProfile(callbackContext);
+                getAllUserProfile(args, callbackContext);
             } else if (type.equalsIgnoreCase(TYPE_DELETE_USER)) {
                 deleteUser(args, callbackContext);
             }
@@ -242,8 +245,12 @@ public class ProfileHandler {
                 });
     }
 
-    private static void getAllUserProfile(final CallbackContext callbackContext) throws JSONException {
-        GenieService.getAsyncService().getUserService().getAllUserProfile(new IResponseHandler<List<Profile>>() {
+    private static void getAllUserProfile(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+        String profileRequest = args.optString(1);
+        ProfileRequest.Builder builder = GsonUtil.fromJson(profileRequest, ProfileRequest.Builder.class);
+
+        GenieService.getAsyncService().getUserService().getAllUserProfile(builder.build(),
+        new IResponseHandler<List<Profile>>() {
             @Override
             public void onSuccess(GenieResponse<List<Profile>> genieResponse) {
                 callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
@@ -254,6 +261,7 @@ public class ProfileHandler {
                 callbackContext.error(GsonUtil.toJson(genieResponse.getResult()));
             }
         });
+
     }
 
     private static void deleteUser(JSONArray args, CallbackContext callbackContext) throws JSONException {
