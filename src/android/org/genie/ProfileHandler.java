@@ -247,39 +247,20 @@ public class ProfileHandler {
 
     private static void getAllUserProfile(JSONArray args, final CallbackContext callbackContext) throws JSONException {
         String profileRequest = args.optString(1);
-        ProfileRequest.Builder builder = null;
+        ProfileRequest.Builder builder = GsonUtil.fromJson(profileRequest, ProfileRequest.Builder.class);
 
-        if (!TextUtils.isEmpty(profileRequest)) {
-            builder = GsonUtil.fromJson(profileRequest, ProfileRequest.Builder.class);
-        }
+        GenieService.getAsyncService().getUserService().getAllUserProfile(builder.build(),
+        new IResponseHandler<List<Profile>>() {
+            @Override
+            public void onSuccess(GenieResponse<List<Profile>> genieResponse) {
+                callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
+            }
 
-        if (builder != null) {
-            GenieService.getAsyncService().getUserService().getAllUserProfile(builder.build(),
-                    new IResponseHandler<List<Profile>>() {
-                        @Override
-                        public void onSuccess(GenieResponse<List<Profile>> genieResponse) {
-                            callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
-                        }
-
-                        @Override
-                        public void onError(GenieResponse<List<Profile>> genieResponse) {
-                            callbackContext.error(GsonUtil.toJson(genieResponse.getResult()));
-                        }
-                    });
-        } else {
-            GenieService.getAsyncService().getUserService().getAllUserProfile(
-                    new IResponseHandler<List<Profile>>() {
-                        @Override
-                        public void onSuccess(GenieResponse<List<Profile>> genieResponse) {
-                            callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
-                        }
-
-                        @Override
-                        public void onError(GenieResponse<List<Profile>> genieResponse) {
-                            callbackContext.error(GsonUtil.toJson(genieResponse.getResult()));
-                        }
-                    });
-        }
+            @Override
+            public void onError(GenieResponse<List<Profile>> genieResponse) {
+                callbackContext.error(GsonUtil.toJson(genieResponse.getResult()));
+            }
+        });
 
     }
 
