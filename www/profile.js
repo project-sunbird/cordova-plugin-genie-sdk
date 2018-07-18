@@ -32,8 +32,8 @@ var profile = {
     exec(success, error, PLUGIN_NAME, this.action(), ["addContentAccess", requestJson]);
   },
 
-  getAllUserProfile: function (success, error) {
-    exec(success, error, PLUGIN_NAME, this.action(), ["getAllUserProfile"]);
+  getAllUserProfile: function (requestJson, success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["getAllUserProfile", requestJson]);
   },
 
   deleteUser: function (requestJson, success, error) {
