@@ -28,6 +28,10 @@ var group = {
     exec(success, error, PLUGIN_NAME, this.action(), ["getCurrentGroup"]);
   },
 
+  addUpdateProfilesToGroup: function (success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["addUpdateProfilesToGroup"]);
+  },
+
   action: function () {
     return "group";
   }

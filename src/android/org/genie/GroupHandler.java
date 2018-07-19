@@ -3,6 +3,7 @@ package org.genie;
 import org.apache.cordova.CallbackContext;
 import org.ekstep.genieservices.GenieService;
 import org.ekstep.genieservices.commons.IResponseHandler;
+import org.ekstep.genieservices.commons.bean.AddUpdateProfilesRequest;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.bean.Group;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
@@ -19,6 +20,7 @@ public class GroupHandler {
     private static final String TYPE_DELETE_GROUP = "deleteGroup";
     private static final String TYPE_SET_CURRENT_GROUP = "setCurrentGroup";
     private static final String TYPE_GET_CURRENT_GROUP = "getCurrentGroup";
+    private static final String TYPE_ADD_UPDATE_PROFILES_TO_GROUP = "addUpdateProfilesToGroup";
 
     public static void handle(JSONArray args, CallbackContext callbackContext) {
         try {
@@ -47,11 +49,32 @@ public class GroupHandler {
                 case TYPE_GET_CURRENT_GROUP:
                     getCurrentGroup(args, callbackContext);
                     break;
+
+                case TYPE_ADD_UPDATE_PROFILES_TO_GROUP:
+                    addUpdateProfilesToGroup(args, callbackContext);
+                    break;
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void addUpdateProfilesToGroup(JSONArray args, CallbackContext callbackContext) throws JSONException {
+        String requestGson = args.getString(1);
+        AddUpdateProfilesRequest addUpdateProfilesRequest = GsonUtil.fromJson(requestGson, AddUpdateProfilesRequest.class);
+        GenieService.getAsyncService().getGroupService().addUpdateProfilesToGroup(addUpdateProfilesRequest, new IResponseHandler<Void>() {
+            @Override
+            public void onSuccess(GenieResponse<Void> genieResponse) {
+                callbackContext.success(GsonUtil.toJson(genieResponse));
+            }
+
+            @Override
+            public void onError(GenieResponse<Void> genieResponse) {
+                callbackContext.error(GsonUtil.toJson(genieResponse));
+            }
+        });
+
     }
 
     private static void createGroup(JSONArray args, final CallbackContext callbackContext)
