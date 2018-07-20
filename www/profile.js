@@ -40,6 +40,14 @@ var profile = {
     exec(success, error, PLUGIN_NAME, this.action(), ["deleteUser", requestJson]);
   },
 
+  importProfile: function (requestJson, success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["importProfile", requestJson]);
+  },
+
+  exportProfile: function (requestJson, success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["exportProfile", requestJson]);
+  },
+
   action: function () {
     return "profile";
   }

@@ -1,13 +1,15 @@
 package org.genie;
 
-import android.text.TextUtils;
-
 import org.apache.cordova.CallbackContext;
 import org.ekstep.genieservices.GenieService;
 import org.ekstep.genieservices.commons.IResponseHandler;
 import org.ekstep.genieservices.commons.bean.ContentAccess;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.bean.Profile;
+import org.ekstep.genieservices.commons.bean.ProfileExportRequest;
+import org.ekstep.genieservices.commons.bean.ProfileExportResponse;
+import org.ekstep.genieservices.commons.bean.ProfileImportRequest;
+import org.ekstep.genieservices.commons.bean.ProfileImportResponse;
 import org.ekstep.genieservices.commons.bean.ProfileRequest;
 import org.ekstep.genieservices.commons.utils.CollectionUtil;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
@@ -32,6 +34,8 @@ public class ProfileHandler {
     private static final String TYPE_ADD_CONTENT_ACCESS = "addContentAccess";
     private static final String TYPE_GET_ALL_USER_PROFILE = "getAllUserProfile";
     private static final String TYPE_DELETE_USER = "deleteUser";
+    private static final String TYPE_EXPORT_PROFILE = "exportProfile";
+    private static final String TYPE_IMPORT_PROFILE = "importProfile";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -54,6 +58,12 @@ public class ProfileHandler {
                 getAllUserProfile(args, callbackContext);
             } else if (type.equalsIgnoreCase(TYPE_DELETE_USER)) {
                 deleteUser(args, callbackContext);
+            }else if (type.equalsIgnoreCase(TYPE_DELETE_USER)) {
+                deleteUser(args, callbackContext);
+            }else if (type.equalsIgnoreCase(TYPE_EXPORT_PROFILE)) {
+                exportProfile(args, callbackContext);
+            }else if (type.equalsIgnoreCase(TYPE_IMPORT_PROFILE)) {
+                importProfile(args, callbackContext);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -275,6 +285,38 @@ public class ProfileHandler {
             @Override
             public void onError(GenieResponse<Void> genieResponse) {
                 callbackContext.error(genieResponse.getError());
+            }
+        });
+    }
+
+    private static void importProfile(JSONArray args, CallbackContext callbackContext) throws JSONException {
+        String profileImportRequest = args.getString(1);
+        ProfileImportRequest.Builder builder = GsonUtil.fromJson(profileImportRequest, ProfileImportRequest.Builder.class);
+        GenieService.getAsyncService().getUserService().importProfile(builder.build(), new IResponseHandler<ProfileImportResponse>() {
+            @Override
+            public void onSuccess(GenieResponse<ProfileImportResponse> genieResponse) {
+                callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
+            }
+
+            @Override
+            public void onError(GenieResponse<ProfileImportResponse> genieResponse) {
+                callbackContext.error(GsonUtil.toJson(genieResponse));
+            }
+        });
+    }
+
+    private static void exportProfile(JSONArray args, CallbackContext callbackContext) throws JSONException {
+        String profileExportRequest = args.getString(1);
+        ProfileExportRequest.Builder builder = GsonUtil.fromJson(profileExportRequest, ProfileExportRequest.Builder.class);
+        GenieService.getAsyncService().getUserService().exportProfile(builder.build(), new IResponseHandler<ProfileExportResponse>() {
+            @Override
+            public void onSuccess(GenieResponse<ProfileExportResponse> genieResponse) {
+                callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
+            }
+
+            @Override
+            public void onError(GenieResponse<ProfileExportResponse> genieResponse) {
+                callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
             }
         });
     }
