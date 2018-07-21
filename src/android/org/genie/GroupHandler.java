@@ -147,7 +147,7 @@ public class GroupHandler {
             throws JSONException {
         String groupId = args.getString(1);
         GenieService.getAsyncService().getGroupService()
-                .setCurrentGroup(groupId, new IResponseHandler<Void>() {
+                .setCurrentGroup(groupId.equalsIgnoreCase("null") ? null: groupId, new IResponseHandler<Void>() {
                     @Override
                     public void onSuccess(GenieResponse<Void> genieResponse) {
                         callbackContext.success(GsonUtil.toJson(genieResponse));
