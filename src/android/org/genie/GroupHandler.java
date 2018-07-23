@@ -6,6 +6,7 @@ import org.ekstep.genieservices.commons.IResponseHandler;
 import org.ekstep.genieservices.commons.bean.AddUpdateProfilesRequest;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.bean.Group;
+import org.ekstep.genieservices.commons.bean.GroupRequest;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -129,7 +130,9 @@ public class GroupHandler {
 
     private static void getAllGroup(JSONArray args, CallbackContext callbackContext)
             throws JSONException {
-        GenieService.getAsyncService().getGroupService().getAllGroup(new IResponseHandler<List<Group>>() {
+        String requestGson = args.getString(1);
+        GroupRequest groupRequest = GsonUtil.fromJson(requestGson, GroupRequest.class);
+        GenieService.getAsyncService().getGroupService().getAllGroup(groupRequest, new IResponseHandler<List<Group>>() {
             @Override
             public void onSuccess(GenieResponse<List<Group>> genieResponse) {
                 callbackContext.success(GsonUtil.toJson(genieResponse));
@@ -147,7 +150,7 @@ public class GroupHandler {
             throws JSONException {
         String groupId = args.getString(1);
         GenieService.getAsyncService().getGroupService()
-                .setCurrentGroup(groupId.equalsIgnoreCase("null") ? null: groupId, new IResponseHandler<Void>() {
+                .setCurrentGroup(groupId.equalsIgnoreCase("null") ? null : groupId, new IResponseHandler<Void>() {
                     @Override
                     public void onSuccess(GenieResponse<Void> genieResponse) {
                         callbackContext.success(GsonUtil.toJson(genieResponse));

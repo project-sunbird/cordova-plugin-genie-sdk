@@ -16,8 +16,8 @@ var group = {
     exec(success, error, PLUGIN_NAME, this.action(), ["deleteGroup", requestJson]);
   },
 
-  getAllGroup: function (success, error) {
-    exec(success, error, PLUGIN_NAME, this.action(), ["getAllGroup"]);
+  getAllGroup: function (requestJson, success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["getAllGroup", requestJson]);
   },
 
   setCurrentGroup: function (requestJson, success, error) {
