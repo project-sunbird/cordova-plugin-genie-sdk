@@ -101,7 +101,7 @@ public class ReportHandler {
     private static void getReportsByQuestion(JSONArray args, CallbackContext callbackContext) throws JSONException {
         String summaryRequest = args.getString(1);
         SummaryRequest.Builder summaryRequestBuilder=GsonUtil.fromJson(summaryRequest, SummaryRequest.Builder.class);
-        GenieService.getAsyncService().getSummarizerService().getReportsByUser(summaryRequestBuilder.build(), new IResponseHandler<List<Map<String,Object>>>() {
+        GenieService.getAsyncService().getSummarizerService().getReportsByQuestion(summaryRequestBuilder.build(), new IResponseHandler<List<Map<String,Object>>>() {
             @Override
             public void onSuccess(GenieResponse<List<Map<String,Object>>> genieResponse) {
                 callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
