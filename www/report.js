@@ -12,6 +12,14 @@ var report = {
         exec(success, error, PLUGIN_NAME, this.action(), ["getDetailReport", uids, contentId]);
     },
 
+    getReportsByUser: function (requestJson, success, error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["getReportsByUser", requestJson]);
+    },
+
+    getReportsByQuestion: function (requestJson, success, error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["getReportsByQuestion", requestJson]);
+    },
+
     action: function () {
         return "report";
     }
