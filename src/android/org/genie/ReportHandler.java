@@ -24,6 +24,7 @@ public class ReportHandler {
     private static final String TYPE_GET_REPORT_DETAIL_FOR_USER = "getDetailReport";
     private static final String TYPE_GET_REPORT_BY_USER = "getReportsByUser";
     private static final String TYPE_GET_REPORT_BY_QUESTION = "getReportsByQuestion";
+    private static final String TYPE_GET_DETAILS_PER_QUESTION = "getDetailsPerQuestion";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
 
@@ -37,6 +38,8 @@ public class ReportHandler {
                 getReportsByUser(args, callbackContext);
             }else if (type.equals(TYPE_GET_REPORT_BY_QUESTION)) {
                 getReportsByQuestion(args, callbackContext);
+            }else if (type.equals(TYPE_GET_DETAILS_PER_QUESTION)) {
+                getDetailsPerQuestion(args, callbackContext);
             }
 
         } catch (JSONException e) {
@@ -102,6 +105,22 @@ public class ReportHandler {
         String summaryRequest = args.getString(1);
         SummaryRequest.Builder summaryRequestBuilder=GsonUtil.fromJson(summaryRequest, SummaryRequest.Builder.class);
         GenieService.getAsyncService().getSummarizerService().getReportByQuestions(summaryRequestBuilder.build(), new IResponseHandler<List<Map<String,Object>>>() {
+            @Override
+            public void onSuccess(GenieResponse<List<Map<String,Object>>> genieResponse) {
+                callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
+            }
+
+            @Override
+            public void onError(GenieResponse<List<Map<String,Object>>> genieResponse) {
+                callbackContext.error(genieResponse.getError());
+            }
+        });
+    }
+
+    private static void getDetailsPerQuestion(JSONArray args, CallbackContext callbackContext) throws JSONException {
+        String summaryRequest = args.getString(1);
+        SummaryRequest.Builder summaryRequestBuilder=GsonUtil.fromJson(summaryRequest, SummaryRequest.Builder.class);
+        GenieService.getAsyncService().getSummarizerService().getDetailsPerQuestion(summaryRequestBuilder.build(), new IResponseHandler<List<Map<String,Object>>>() {
             @Override
             public void onSuccess(GenieResponse<List<Map<String,Object>>> genieResponse) {
                 callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
