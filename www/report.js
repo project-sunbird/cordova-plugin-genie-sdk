@@ -20,6 +20,10 @@ var report = {
         exec(success, error, PLUGIN_NAME, this.action(), ["getReportsByQuestion", requestJson]);
     },
 
+    getDetailsPerQuestion: function (requestJson, success, error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["getDetailsPerQuestion", requestJson]);
+    },
+
     action: function () {
         return "report";
     }
