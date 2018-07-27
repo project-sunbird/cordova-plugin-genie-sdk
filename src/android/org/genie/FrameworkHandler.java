@@ -43,7 +43,7 @@ public class FrameworkHandler {
 
         FrameworkDetailsRequest.Builder frameworkDetailsRequest = GsonUtil.fromJson(requestJson, FrameworkDetailsRequest.Builder.class);
         FrameworkDetailsRequest request = frameworkDetailsRequest.build();
-        frameworkDetailsRequest.forFramework(request.getFrameworkId() + "?categories=board,gradeLevel,subject,medium");
+        frameworkDetailsRequest.forFramework(request.getFrameworkId());
         GenieService.getAsyncService().getFrameworkService().getFrameworkDetails(frameworkDetailsRequest.build(), new IResponseHandler<Framework>() {
             @Override
             public void onSuccess(GenieResponse<Framework> genieResponse) {
