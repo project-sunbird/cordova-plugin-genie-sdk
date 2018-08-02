@@ -6,6 +6,7 @@ import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
 import org.ekstep.genieservices.commons.bean.ContentImportResponse;
 import org.ekstep.genieservices.commons.bean.DownloadProgress;
+import org.ekstep.genieservices.commons.bean.GenericEvent;
 import org.ekstep.genieservices.commons.bean.ImportContentProgress;
 import org.ekstep.genieservices.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -74,10 +75,21 @@ public class GenieSdkEventListener {
         mCallback.sendPluginResult(pluginResult);
     }
 
+    @Subscribe()
+    public void onGenericEvent(GenericEvent genericEvent)
+            throws InterruptedException {
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK,
+                mGson.toJson(new EventResponse(EventResponse.TYPE_GENERIC_EVENT, genericEvent)));
+        pluginResult.setKeepCallback(true);
+
+        mCallback.sendPluginResult(pluginResult);
+    }
+
     public class EventResponse {
       public static final String TYPE_CONTENT_IMPORT_RESPONSE = "contentImport";
       public static final String TYPE_CONTENT_IMPORT_PROGRESS = "contentImportProgress";
       public static final String TYPE_DOWNLOAD_PRGORESS = "downloadProgress";
+      public static final String TYPE_GENERIC_EVENT = "genericEvent";
 
       public final String type;
       public final Object data;
