@@ -64,6 +64,10 @@ var content = {
     exec(success, error, PLUGIN_NAME, this.action(), ["getSearchCriteriaFromRequest", requestJson]);
   },
 
+  getLocalContents: function (requestJson, success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["getLocalContents", requestJson]);
+  },
+
   action: function () {
     return "content";
   }

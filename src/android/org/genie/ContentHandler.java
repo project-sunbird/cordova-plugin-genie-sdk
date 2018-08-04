@@ -24,6 +24,7 @@ import org.ekstep.genieservices.commons.bean.DialCodeRequest;
 import org.ekstep.genieservices.commons.bean.EcarImportRequest;
 import org.ekstep.genieservices.commons.bean.FlagContentRequest;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
+import org.ekstep.genieservices.commons.bean.SummarizerContentFilterCriteria;
 import org.ekstep.genieservices.commons.bean.SunbirdContentSearchCriteria;
 import org.ekstep.genieservices.commons.bean.SunbirdContentSearchResult;
 import org.ekstep.genieservices.commons.bean.enums.DownloadAction;
@@ -59,6 +60,7 @@ public class ContentHandler {
     private static final String TYPE_GET_SEARCH_CRITERIA_FROM_REQUEST = "getSearchCriteriaFromRequest";
     private static final String TYPE_SEND_FEEDBACK = "sendFeedback";
     private static final String TYPE_FLAG_CONTENT = "flagContent";
+    private static final String TYPE_GET_LOCAL_CONTENTS = "getLocalContents";
 
     public static final String DEFAULT_CHANNEL_PREF_KEY = "default_channel";
 
@@ -95,6 +97,8 @@ public class ContentHandler {
                 sendFeedback(args, callbackContext);
             } else if (type.equals(TYPE_FLAG_CONTENT)) {
                 flagContent(args, callbackContext);
+            }else if (type.equals(TYPE_GET_LOCAL_CONTENTS)) {
+                getLocalContents(args, callbackContext);
             }
 
         } catch (JSONException e) {
@@ -462,5 +466,26 @@ public class ContentHandler {
                     }
                 });
     }
+
+    private static void getLocalContents(JSONArray args, final CallbackContext callbackContext)
+            throws JSONException {
+        final String requestJson = args.getString(1);
+
+        SummarizerContentFilterCriteria.Builder builder = GsonUtil.fromJson(requestJson, SummarizerContentFilterCriteria.Builder.class);
+
+        GenieService.getAsyncService().getContentService().getLocalContents(builder.build(),
+                new IResponseHandler<List<Content>>() {
+                    @Override
+                    public void onSuccess(GenieResponse<List<Content>> genieResponse) {
+                        callbackContext.success(GsonUtil.toJson(genieResponse));
+                    }
+
+                    @Override
+                    public void onError(GenieResponse<List<Content>> genieResponse) {
+                        callbackContext.error(GsonUtil.toJson(genieResponse));
+                    }
+                });
+    }
+
 
 }
