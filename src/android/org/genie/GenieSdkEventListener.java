@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
 import org.ekstep.genieservices.commons.bean.ContentImportResponse;
+import org.ekstep.genieservices.commons.bean.ContentUpdateAvailable;
 import org.ekstep.genieservices.commons.bean.DownloadProgress;
 import org.ekstep.genieservices.commons.bean.GenericEvent;
 import org.ekstep.genieservices.commons.bean.ImportContentProgress;
@@ -76,6 +77,16 @@ public class GenieSdkEventListener {
     }
 
     @Subscribe()
+    public void onContentUpdateAvailable(ContentUpdateAvailable contentUpdateAvailable)
+            throws InterruptedException {
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK,
+                mGson.toJson(new EventResponse(EventResponse.TYPE_CONTENT_UPDATE_AVAILALE, contentUpdateAvailable)));
+        pluginResult.setKeepCallback(true);
+
+        mCallback.sendPluginResult(pluginResult);
+    }
+
+    @Subscribe()
     public void onGenericEvent(GenericEvent genericEvent)
             throws InterruptedException {
         PluginResult pluginResult = new PluginResult(PluginResult.Status.OK,
@@ -86,18 +97,19 @@ public class GenieSdkEventListener {
     }
 
     public class EventResponse {
-      public static final String TYPE_CONTENT_IMPORT_RESPONSE = "contentImport";
-      public static final String TYPE_CONTENT_IMPORT_PROGRESS = "contentImportProgress";
-      public static final String TYPE_DOWNLOAD_PRGORESS = "downloadProgress";
-      public static final String TYPE_GENERIC_EVENT = "genericEvent";
+        public static final String TYPE_CONTENT_IMPORT_RESPONSE = "contentImport";
+        public static final String TYPE_CONTENT_IMPORT_PROGRESS = "contentImportProgress";
+        public static final String TYPE_DOWNLOAD_PRGORESS = "downloadProgress";
+        public static final String TYPE_CONTENT_UPDATE_AVAILALE = "contentUpdateAvailable";
+        public static final String TYPE_GENERIC_EVENT = "genericEvent";
 
-      public final String type;
-      public final Object data;
+        public final String type;
+        public final Object data;
 
-      public EventResponse(String type, Object data) {
-        this.type = type;
-        this.data = data;
-      }
+        public EventResponse(String type, Object data) {
+            this.type = type;
+            this.data = data;
+        }
 
     }
 }
