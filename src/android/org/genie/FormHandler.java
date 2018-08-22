@@ -2,8 +2,8 @@ package org.genie;
 
 import org.apache.cordova.CallbackContext;
 import org.ekstep.genieservices.GenieService;
-import org.ekstep.genieservices.commons.bean.FormRequest;
 import org.ekstep.genieservices.commons.IResponseHandler;
+import org.ekstep.genieservices.commons.bean.FormRequest;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.json.JSONArray;
@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class FormHandler {
 
-    private static final String TYPE_GET_FORM= "getForm";
+    private static final String TYPE_GET_FORM = "getForm";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -35,14 +35,14 @@ public class FormHandler {
 
         FormRequest.Builder formRequest = GsonUtil.fromJson(requestJson, FormRequest.Builder.class);
 
-        GenieService.getAsyncService().getFormService().getForm(formRequest.build(), new IResponseHandler<Map<String,Object>>() {
+        GenieService.getAsyncService().getFormService().getForm(formRequest.build(), new IResponseHandler<Map<String, Object>>() {
             @Override
-            public void onSuccess(GenieResponse<Map<String,Object>> genieResponse) {
+            public void onSuccess(GenieResponse<Map<String, Object>> genieResponse) {
                 callbackContext.success(GsonUtil.toJson(genieResponse));
             }
 
             @Override
-            public void onError(GenieResponse<Map<String,Object>> genieResponse) {
+            public void onError(GenieResponse<Map<String, Object>> genieResponse) {
                 callbackContext.error(GsonUtil.toJson(genieResponse));
             }
         });

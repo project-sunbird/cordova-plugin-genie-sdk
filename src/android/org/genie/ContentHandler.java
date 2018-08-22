@@ -28,9 +28,9 @@ import org.ekstep.genieservices.commons.bean.SummarizerContentFilterCriteria;
 import org.ekstep.genieservices.commons.bean.SunbirdContentSearchCriteria;
 import org.ekstep.genieservices.commons.bean.SunbirdContentSearchResult;
 import org.ekstep.genieservices.commons.bean.enums.DownloadAction;
+import org.ekstep.genieservices.commons.utils.CollectionUtil;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.ekstep.genieservices.commons.utils.StringUtil;
-import org.ekstep.genieservices.commons.utils.CollectionUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +45,7 @@ import java.util.Map;
 
 public class ContentHandler {
 
+    public static final String DEFAULT_CHANNEL_PREF_KEY = "default_channel";
     private static final String TYPE_GET_CONTENT_DETAIL = "getContentDetail";
     private static final String TYPE_IMPORT_ECAR = "importEcar";
     private static final String TYPE_IMPORT_CONTENT = "importContent";
@@ -61,8 +62,6 @@ public class ContentHandler {
     private static final String TYPE_SEND_FEEDBACK = "sendFeedback";
     private static final String TYPE_FLAG_CONTENT = "flagContent";
     private static final String TYPE_GET_LOCAL_CONTENTS = "getLocalContents";
-
-    public static final String DEFAULT_CHANNEL_PREF_KEY = "default_channel";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -97,7 +96,7 @@ public class ContentHandler {
                 sendFeedback(args, callbackContext);
             } else if (type.equals(TYPE_FLAG_CONTENT)) {
                 flagContent(args, callbackContext);
-            }else if (type.equals(TYPE_GET_LOCAL_CONTENTS)) {
+            } else if (type.equals(TYPE_GET_LOCAL_CONTENTS)) {
                 getLocalContents(args, callbackContext);
             }
 
@@ -203,26 +202,24 @@ public class ContentHandler {
                                 if (!CollectionUtil.isNullOrEmpty(contentDataList)) {
                                     ContentData contentData = contentDataList.get(0);
                                     String channel = contentData.getChannel();
-                                    if(!StringUtil.isNullOrEmpty(channel)){
+                                    if (!StringUtil.isNullOrEmpty(channel)) {
                                         GenieService.getService().getKeyStore().putString("channelId", channel);
                                         GenieService.getService().getKeyStore().putString(DEFAULT_CHANNEL_PREF_KEY, channel);
                                         SDKParams.setParams();
-                                    }
-                                    else{
-                                        DialCodeRequest dialCodeRequest= new DialCodeRequest.Builder().
+                                    } else {
+                                        DialCodeRequest dialCodeRequest = new DialCodeRequest.Builder().
                                                 dialCode(criteria.getDialCodes()[0]).build();
                                         getDialCode(dialCodeRequest);
                                     }
 
                                     callbackContext.success(GsonUtil.toJson(genieResponse));
                                 } else {
-                                    DialCodeRequest dialCodeRequest= new DialCodeRequest.Builder().
+                                    DialCodeRequest dialCodeRequest = new DialCodeRequest.Builder().
                                             dialCode(criteria.getDialCodes()[0]).build();
                                     getDialCode(dialCodeRequest);
                                     callbackContext.success(GsonUtil.toJson(genieResponse));
                                 }
-                            }
-                            else{
+                            } else {
                                 callbackContext.success(GsonUtil.toJson(genieResponse));
                             }
 
@@ -238,15 +235,15 @@ public class ContentHandler {
                 });
     }
 
-    private static void getDialCode(DialCodeRequest dialCodeRequest){
+    private static void getDialCode(DialCodeRequest dialCodeRequest) {
         GenieService.getAsyncService().getDialCodeService().getDialCode(dialCodeRequest, new IResponseHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(GenieResponse<Map<String, Object>> genieResponse) {
-                Map<String,Object> result = genieResponse.getResult();
-                if(result!=null && result.get("dialcode")!=null){
-                    Map<String,Object> dialcode = (Map<String,Object>)result.get("dialcode");
-                    String channel=String.valueOf(dialcode.get("channel"));
-                    if(!StringUtil.isNullOrEmpty(channel)){
+                Map<String, Object> result = genieResponse.getResult();
+                if (result != null && result.get("dialcode") != null) {
+                    Map<String, Object> dialcode = (Map<String, Object>) result.get("dialcode");
+                    String channel = String.valueOf(dialcode.get("channel"));
+                    if (!StringUtil.isNullOrEmpty(channel)) {
                         GenieService.getService().getKeyStore().putString("channelId", channel);
                         GenieService.getService().getKeyStore().putString(DEFAULT_CHANNEL_PREF_KEY, channel);
                         SDKParams.setParams();
@@ -486,6 +483,5 @@ public class ContentHandler {
                     }
                 });
     }
-
 
 }

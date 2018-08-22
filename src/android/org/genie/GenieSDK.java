@@ -10,10 +10,7 @@ import org.json.JSONException;
 /**
  * Created by souvikmondal on 8/1/18.
  */
-
 public class GenieSDK extends CordovaPlugin {
-
-
 
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -42,11 +39,11 @@ public class GenieSDK extends CordovaPlugin {
             PageHandler.handle(args, callbackContext);
         } else if (action.equals("permission")) {
             PermissionHandler.handle(this, args, callbackContext);
-        } else if (action.equals("announcement")){
+        } else if (action.equals("announcement")) {
             AnnouncementHandler.handle(args, callbackContext);
         } else if (action.equals("preferences")) {
             SharedPreferencesHandler.handle(args, callbackContext);
-        }  else if (action.equals("genieSdkUtil")) {
+        } else if (action.equals("genieSdkUtil")) {
             GenieSdkUtilHandler.handle(cordova, args, callbackContext);
         } else if (action.equals("share")) {
             ShareHandler.handle(args, cordova, callbackContext);

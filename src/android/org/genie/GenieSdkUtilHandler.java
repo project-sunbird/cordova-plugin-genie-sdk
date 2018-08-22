@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -89,17 +88,15 @@ public class GenieSdkUtilHandler {
         } catch (UnsupportedEncodingException e) {
             callbackContext.error("FAILED");
         }
-
     }
 
     /**
      * Open the appId details on Google Play .
      *
-     * @param appId
-     *            Application Id on Google Play.
-     *            E.g.: com.google.earth
+     * @param appId Application Id on Google Play.
+     *              E.g.: com.google.earth
      */
-    private static void openGooglePlay(CordovaInterface cordova,String appId) {
+    private static void openGooglePlay(CordovaInterface cordova, String appId) {
         try {
             Context context = cordova.getActivity().getApplicationContext();
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appId));

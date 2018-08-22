@@ -7,21 +7,13 @@ import org.ekstep.genieservices.commons.bean.Framework;
 import org.ekstep.genieservices.commons.bean.FrameworkDetailsRequest;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
-import org.ekstep.genieservices.commons.utils.StringUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class FrameworkHandler {
 
     private static final String TYPE_GET_FRAMEWORK_DETAILS = "getFrameworkDetails";
     private static final String TYPE_PERSIST_FRAMEWORK_DETAILS = "persistFrameworkDetails";
-    private static final String TYPE_GET_CATEGORY_DATA = "getCategoryData";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -31,7 +23,7 @@ public class FrameworkHandler {
                 getFrameworkDetails(args, callbackContext);
             } else if (TYPE_PERSIST_FRAMEWORK_DETAILS.equals(type)) {
                 persistFrameworkDetails(args, callbackContext);
-            } 
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -42,6 +34,10 @@ public class FrameworkHandler {
         final String requestJson = args.getString(1);
 
         FrameworkDetailsRequest.Builder frameworkDetailsRequest = GsonUtil.fromJson(requestJson, FrameworkDetailsRequest.Builder.class);
+        FrameworkDetailsRequest request = frameworkDetailsRequest.build();
+        String path = "assets/www/sunbird/assets/";
+        frameworkDetailsRequest.defaultFrameworkPath(path + request.getDefaultFrameworkPath());
+
         GenieService.getAsyncService().getFrameworkService().getFrameworkDetails(frameworkDetailsRequest.build(), new IResponseHandler<Framework>() {
             @Override
             public void onSuccess(GenieResponse<Framework> genieResponse) {

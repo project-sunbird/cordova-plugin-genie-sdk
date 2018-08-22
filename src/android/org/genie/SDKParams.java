@@ -19,6 +19,16 @@ public class SDKParams implements IParams {
         this.mValues = new HashMap<>();
     }
 
+    public static void setParams() {
+        SDKParams params = new SDKParams();
+        String channelId = GenieService.getService().getKeyStore().getString("channelId", "");
+        if (StringUtil.isNullOrEmpty(channelId)) {
+            channelId = null;
+        }
+        params.put(SDKParams.Key.CHANNEL_ID, channelId);
+        GenieService.setParams(params);
+    }
+
     public void put(String key, Object value) {
         this.mValues.put(key, value);
     }
@@ -49,15 +59,5 @@ public class SDKParams implements IParams {
 
     public void clear() {
         this.mValues.clear();
-    }
-
-    public static void setParams() {
-        SDKParams params = new SDKParams();
-        String channelId = GenieService.getService().getKeyStore().getString("channelId", "");
-        if (StringUtil.isNullOrEmpty(channelId)) {
-            channelId = null;
-        }
-        params.put(SDKParams.Key.CHANNEL_ID, channelId);
-        GenieService.setParams(params);
     }
 }
