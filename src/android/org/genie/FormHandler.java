@@ -34,6 +34,8 @@ public class FormHandler {
         final String requestJson = args.getString(1);
 
         FormRequest.Builder formRequest = GsonUtil.fromJson(requestJson, FormRequest.Builder.class);
+        FormRequest request = formRequest.build();
+        formRequest.defaultFormPath(Constants.DEFAULT_ASSET_PATH + request.getDefaultFormPath());
 
         GenieService.getAsyncService().getFormService().getForm(formRequest.build(), new IResponseHandler<Map<String, Object>>() {
             @Override

@@ -57,8 +57,7 @@ public class FrameworkHandler {
 
         FrameworkDetailsRequest.Builder frameworkDetailsRequest = GsonUtil.fromJson(requestJson, FrameworkDetailsRequest.Builder.class);
         FrameworkDetailsRequest request = frameworkDetailsRequest.build();
-        String path = "assets/www/sunbird/assets/";
-        frameworkDetailsRequest.defaultFrameworkPath(path + request.getDefaultFrameworkPath());
+        frameworkDetailsRequest.defaultFrameworkPath(Constants.DEFAULT_ASSET_PATH + request.getDefaultFrameworkPath());
 
         GenieService.getAsyncService().getFrameworkService().getFrameworkDetails(frameworkDetailsRequest.build(), new IResponseHandler<Framework>() {
             @Override
