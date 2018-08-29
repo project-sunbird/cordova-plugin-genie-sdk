@@ -39,53 +39,60 @@ public class FrameworkHandler {
         final String requestJson = args.getString(1);
 
         ChannelDetailsRequest.Builder builder = GsonUtil.fromJson(requestJson, ChannelDetailsRequest.Builder.class);
-        GenieService.getAsyncService().getFrameworkService().getChannelDetails(builder.build(), new IResponseHandler<Channel>() {
-            @Override
-            public void onSuccess(GenieResponse<Channel> genieResponse) {
-                callbackContext.success(GsonUtil.toJson(genieResponse));
-            }
+        ChannelDetailsRequest request = builder.build();
+        builder.fromFilePath(Constants.DEFAULT_ASSET_PATH + request.getFilePath());
 
-            @Override
-            public void onError(GenieResponse<Channel> genieResponse) {
-                callbackContext.error(GsonUtil.toJson(genieResponse));
-            }
-        });
+        GenieService.getAsyncService().getFrameworkService().getChannelDetails(builder.build(),
+                new IResponseHandler<Channel>() {
+                    @Override
+                    public void onSuccess(GenieResponse<Channel> genieResponse) {
+                        callbackContext.success(GsonUtil.toJson(genieResponse));
+                    }
+
+                    @Override
+                    public void onError(GenieResponse<Channel> genieResponse) {
+                        callbackContext.error(GsonUtil.toJson(genieResponse));
+                    }
+                });
     }
 
-    private static void getFrameworkDetails(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+    private static void getFrameworkDetails(JSONArray args, final CallbackContext callbackContext)
+            throws JSONException {
         final String requestJson = args.getString(1);
 
-        FrameworkDetailsRequest.Builder frameworkDetailsRequest = GsonUtil.fromJson(requestJson, FrameworkDetailsRequest.Builder.class);
-        FrameworkDetailsRequest request = frameworkDetailsRequest.build();
-        frameworkDetailsRequest.defaultFrameworkPath(Constants.DEFAULT_ASSET_PATH + request.getDefaultFrameworkPath());
+        FrameworkDetailsRequest.Builder builder = GsonUtil.fromJson(requestJson, FrameworkDetailsRequest.Builder.class);
+        FrameworkDetailsRequest request = builder.build();
+        builder.fromFilePath(Constants.DEFAULT_ASSET_PATH + request.getFilePath());
 
-        GenieService.getAsyncService().getFrameworkService().getFrameworkDetails(frameworkDetailsRequest.build(), new IResponseHandler<Framework>() {
-            @Override
-            public void onSuccess(GenieResponse<Framework> genieResponse) {
-                callbackContext.success(genieResponse.getResult().getFramework());
-            }
+        GenieService.getAsyncService().getFrameworkService().getFrameworkDetails(builder.build(),
+                new IResponseHandler<Framework>() {
+                    @Override
+                    public void onSuccess(GenieResponse<Framework> genieResponse) {
+                        callbackContext.success(genieResponse.getResult().getFramework());
+                    }
 
-            @Override
-            public void onError(GenieResponse<Framework> genieResponse) {
-                callbackContext.error(GsonUtil.toJson(genieResponse));
-            }
-        });
+                    @Override
+                    public void onError(GenieResponse<Framework> genieResponse) {
+                        callbackContext.error(GsonUtil.toJson(genieResponse));
+                    }
+                });
     }
 
     private static void persistFrameworkDetails(JSONArray args, CallbackContext callbackContext) throws JSONException {
         final String requestJson = args.getString(1);
 
-        GenieService.getAsyncService().getFrameworkService().persistFrameworkDetails(requestJson, new IResponseHandler<Void>() {
-            @Override
-            public void onSuccess(GenieResponse<Void> genieResponse) {
-                // callbackContext.success(GsonUtil.toJson(genieResponse));
-            }
+        GenieService.getAsyncService().getFrameworkService().persistFrameworkDetails(requestJson,
+                new IResponseHandler<Void>() {
+                    @Override
+                    public void onSuccess(GenieResponse<Void> genieResponse) {
+                        // callbackContext.success(GsonUtil.toJson(genieResponse));
+                    }
 
-            @Override
-            public void onError(GenieResponse<Void> genieResponse) {
-                // callbackContext.error(GsonUtil.toJson(genieResponse));
-            }
-        });
+                    @Override
+                    public void onError(GenieResponse<Void> genieResponse) {
+                        // callbackContext.error(GsonUtil.toJson(genieResponse));
+                    }
+                });
     }
 
 }
