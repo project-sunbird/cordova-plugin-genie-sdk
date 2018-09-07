@@ -35,18 +35,19 @@ public class FormHandler {
 
         FormRequest.Builder formRequest = GsonUtil.fromJson(requestJson, FormRequest.Builder.class);
         FormRequest request = formRequest.build();
-        formRequest.defaultFormPath(Constants.DEFAULT_ASSET_PATH + request.getDefaultFormPath());
+        formRequest.fromFilePath(Constants.DEFAULT_ASSET_PATH + request.getFilePath());
 
-        GenieService.getAsyncService().getFormService().getForm(formRequest.build(), new IResponseHandler<Map<String, Object>>() {
-            @Override
-            public void onSuccess(GenieResponse<Map<String, Object>> genieResponse) {
-                callbackContext.success(GsonUtil.toJson(genieResponse));
-            }
+        GenieService.getAsyncService().getFormService().getForm(formRequest.build(),
+                new IResponseHandler<Map<String, Object>>() {
+                    @Override
+                    public void onSuccess(GenieResponse<Map<String, Object>> genieResponse) {
+                        callbackContext.success(GsonUtil.toJson(genieResponse));
+                    }
 
-            @Override
-            public void onError(GenieResponse<Map<String, Object>> genieResponse) {
-                callbackContext.error(GsonUtil.toJson(genieResponse));
-            }
-        });
+                    @Override
+                    public void onError(GenieResponse<Map<String, Object>> genieResponse) {
+                        callbackContext.error(GsonUtil.toJson(genieResponse));
+                    }
+                });
     }
 }
