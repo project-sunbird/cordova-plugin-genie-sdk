@@ -24,6 +24,10 @@ public class SharedPreferencesHandler {
                 String key = KEY_PREFIX + args.getString(1);
                 String value = GenieService.getService().getKeyStore().getString(key,"");
                 callbackContext.success(value);
+            } else if (type.equals("getStringWithoutPrefix")) {
+                String key = args.getString(1);
+                String value = GenieService.getService().getKeyStore().getString(key,"");
+                callbackContext.success(value);
             }
 
         } catch (JSONException e) {
