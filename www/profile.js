@@ -48,6 +48,10 @@ var profile = {
     exec(success, error, PLUGIN_NAME, this.action(), ["exportProfile", requestJson]);
   },
 
+  getProfile: function (requestJson, success, error) {
+    exec(success, error, PLUGIN_NAME, this.action(), ["getProfile", requestJson]);
+  },
+
   action: function () {
     return "profile";
   }
