@@ -27,13 +27,16 @@ import io.fabric.sdk.android.Fabric;
 /**
  * Created by swayangjit on 21/4/18.
  */
-public class SunbirdApplication extends Application implements ForegroundService.OnForegroundChangeListener{
+public class SunbirdApplication extends Application implements ForegroundService.OnForegroundChangeListener {
+
+    public static final String PACKAGE_NAME = "org.sunbird.app";
+
     @Override
     public void onCreate() {
         super.onCreate();
         registerActivityLifecycleCallbacks(ForegroundService.getInstance());
         ForegroundService.getInstance().registerListener(this);
-        GenieService.init(this, getApplicationInfo().packageName);
+        GenieService.init(this, PACKAGE_NAME);
         SDKParams.setParams();
         saveTelemetry(buildStartEvent(this));
         TelemetrySyncOperation.startSyncingTelemetry();
@@ -55,7 +58,7 @@ public class SunbirdApplication extends Application implements ForegroundService
         TelemetrySyncOperation.shutDownSchedulers();
     }
 
-    private void saveTelemetry(Telemetry telemetry){
+    private void saveTelemetry(Telemetry telemetry) {
         GenieService.getAsyncService().getTelemetryService().saveTelemetry(telemetry, new IResponseHandler<Void>() {
             @Override
             public void onSuccess(GenieResponse<Void> genieResponse) {
@@ -69,7 +72,7 @@ public class SunbirdApplication extends Application implements ForegroundService
         });
     }
 
-    public  Start buildStartEvent(Context context) {
+    public Start buildStartEvent(Context context) {
 
         DeviceSpecification deviceSpec = new DeviceSpecification();
         deviceSpec.setOs("Android " + org.ekstep.genieservices.utils.DeviceSpec.getOSVersion());
@@ -113,7 +116,7 @@ public class SunbirdApplication extends Application implements ForegroundService
         return start;
     }
 
-    public  String bytesToHuman(long size) {
+    public String bytesToHuman(long size) {
         long Kb = 1 * 1024;
         long Mb = Kb * 1024;
         long Gb = Mb * 1024;
@@ -132,12 +135,12 @@ public class SunbirdApplication extends Application implements ForegroundService
         return "0.00";
     }
 
-    public  String floatForm(double d) {
+    public String floatForm(double d) {
         return String.format(Locale.US, "%.2f", d);
     }
 
-    private void initCrashlytics(){
-        if(BuildConfigUtil.getBuildConfigValue(getApplicationInfo().packageName, "USE_CRASHLYTICS")){
+    private void initCrashlytics() {
+        if (BuildConfigUtil.getBuildConfigValue(PACKAGE_NAME, "USE_CRASHLYTICS")) {
             Fabric.with(this, new Crashlytics());
         }
     }

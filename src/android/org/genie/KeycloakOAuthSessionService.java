@@ -16,6 +16,7 @@ import org.ekstep.genieservices.utils.BuildConfigUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.sunbird.SunbirdApplication;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -34,7 +35,6 @@ import okhttp3.Response;
 /**
  * Created by swayangjit on 23/3/18.
  */
-
 public class KeycloakOAuthSessionService extends AbstractAuthSessionImpl {
 
     private static String END_POINT = "/auth/realms/sunbird/protocol/openid-connect/token";
@@ -45,12 +45,18 @@ public class KeycloakOAuthSessionService extends AbstractAuthSessionImpl {
     public KeycloakOAuthSessionService() {
 
     }
-    
+
+    public static String decodeBase64(String data) throws UnsupportedEncodingException {
+        byte[] dataText = Base64Util.decode(data, Base64Util.URL_SAFE);
+        String text = new String(dataText, "UTF-8");
+        return text;
+    }
+
     private Map<String, String> getCreateSessionFormData(String userToken) {
         Map<String, String> requestMap = new HashMap<>();
         try {
-            Context context =(Context) mAppContext.getContext();
-            requestMap.put("redirect_uri", BuildConfigUtil.getBuildConfigValue(context.getApplicationInfo().packageName,"BASE_URL")+"/oauth2callback");
+            Context context = (Context) mAppContext.getContext();
+            requestMap.put("redirect_uri", BuildConfigUtil.getBuildConfigValue(SunbirdApplication.PACKAGE_NAME, "BASE_URL") + "/oauth2callback");
             requestMap.put("code", userToken);
             requestMap.put("grant_type", "authorization_code");
             requestMap.put("client_id", "android");
@@ -83,7 +89,6 @@ public class KeycloakOAuthSessionService extends AbstractAuthSessionImpl {
         }
 
         return genieResponse;
-
     }
 
     @Override
@@ -108,10 +113,9 @@ public class KeycloakOAuthSessionService extends AbstractAuthSessionImpl {
         }
 
         return genieResponse;
-
     }
 
-    public  String parseUserTokenFromAccessToken(String userAccessToken) {
+    public String parseUserTokenFromAccessToken(String userAccessToken) {
         String value = userAccessToken.substring(userAccessToken.indexOf("."), userAccessToken.lastIndexOf("."));
         String userToken = null;
         JSONObject jo = null;
@@ -127,20 +131,14 @@ public class KeycloakOAuthSessionService extends AbstractAuthSessionImpl {
         return userToken;
     }
 
-    public static String decodeBase64(String data) throws UnsupportedEncodingException {
-        byte[] dataText = Base64Util.decode(data, Base64Util.URL_SAFE);
-        String text = new String(dataText, "UTF-8");
-        return text;
-    }
-
     private Map<String, Object> invokeAPI(Map<String, String> formData) throws IOException {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.readTimeout(10, TimeUnit.SECONDS);
         builder.connectTimeout(10, TimeUnit.SECONDS);
         OkHttpClient httpClient = builder.build();
-        Context context =(Context) mAppContext.getContext();
+        Context context = (Context) mAppContext.getContext();
         Request request = new Request.Builder()
-                .url(BuildConfigUtil.getBuildConfigValue(context.getApplicationInfo().packageName,"BASE_URL") + END_POINT)
+                .url(BuildConfigUtil.getBuildConfigValue(SunbirdApplication.PACKAGE_NAME, "BASE_URL") + END_POINT)
                 .post(createRequestBody(formData))
                 .build();
         Response response = httpClient.newCall(request).execute();

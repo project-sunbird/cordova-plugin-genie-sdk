@@ -12,6 +12,7 @@ import org.ekstep.genieservices.commons.utils.Base64Util;
 import org.ekstep.genieservices.utils.BuildConfigUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.sunbird.SunbirdApplication;
 
 import java.io.UnsupportedEncodingException;
 
@@ -74,7 +75,7 @@ public class GenieSdkUtilHandler {
 
     private static void getBuildConfigParam(CordovaInterface cordova, JSONArray args, CallbackContext callbackContext) throws JSONException {
         String param = args.getString(1);
-        String value = BuildConfigUtil.getBuildConfigValue(cordova.getContext().getApplicationInfo().packageName, param).toString();
+        String value = BuildConfigUtil.getBuildConfigValue(SunbirdApplication.PACKAGE_NAME, param).toString();
         callbackContext.success(value);
     }
 
