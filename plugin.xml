@@ -76,6 +76,16 @@
             </feature>
         </config-file>
 
+        <config-file target="AndroidManifest.xml" parent="application">
+            <receiver
+            android:name="org.sunbird.utm.ReferrerReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+        </config-file>
+
         <hook type="after_prepare" src="add_application_name.js" />
 
         <source-file src="src/android/org/genie/GenieSDK.java" target-dir="src/org/genie/" />
@@ -106,6 +116,8 @@
         <source-file src="src/android/org/genie/Constants.java" target-dir="src/org/genie/" />
         <source-file src="src/android/org/sunbird/sync/SyncConfiguration.java" target-dir="src/org/sunbird/sync" />
         <source-file src="src/android/org/sunbird/sync/TelemetrySyncOperation.java" target-dir="src/org/sunbird/sync" />
+        <source-file src="src/android/org/sunbird/utm/ReferrerReceiver.java" target-dir="src/org/sunbird/utm" />
+        <source-file src="src/android/org/sunbird/utm/UTMData.java" target-dir="src/org/sunbird/utm" />
 
 
     </platform>
