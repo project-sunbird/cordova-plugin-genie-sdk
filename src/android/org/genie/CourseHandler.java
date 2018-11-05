@@ -5,12 +5,14 @@ import org.ekstep.genieservices.GenieService;
 import org.ekstep.genieservices.commons.IResponseHandler;
 import org.ekstep.genieservices.commons.bean.Batch;
 import org.ekstep.genieservices.commons.bean.BatchDetailsRequest;
+import org.ekstep.genieservices.commons.bean.ContentStateResponse;
 import org.ekstep.genieservices.commons.bean.CourseBatchesRequest;
 import org.ekstep.genieservices.commons.bean.CourseBatchesResponse;
 import org.ekstep.genieservices.commons.bean.EnrollCourseRequest;
 import org.ekstep.genieservices.commons.bean.EnrolledCoursesRequest;
 import org.ekstep.genieservices.commons.bean.EnrolledCoursesResponse;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
+import org.ekstep.genieservices.commons.bean.GetContentStateRequest;
 import org.ekstep.genieservices.commons.bean.UpdateContentStateRequest;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.json.JSONArray;
@@ -28,6 +30,7 @@ public class CourseHandler {
     private static final String TYPE_UPDATE_CONTENT_STATE = "updateContentState";
     private static final String TYPE_GET_COURSE_BATCHES = "getCourseBatches";
     private static final String TYPE_GET_BATCH_DETAILS = "getBatchDetails";
+    private static final String TYPE_GET_COURSE_CONTENT_STATE = "getContentState";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -42,6 +45,8 @@ public class CourseHandler {
                 getCourseBatches(args, callbackContext);
             } else if (type.equals(TYPE_GET_BATCH_DETAILS)) {
                 getBatchDetails(args, callbackContext);
+            }else if (type.equals(TYPE_GET_COURSE_CONTENT_STATE)) {
+                getContentState(args, callbackContext);
             }
 
         } catch (JSONException e) {
@@ -141,4 +146,24 @@ public class CourseHandler {
                     }
                 });
     }
+
+    private static void getContentState(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+        String requestJson = args.getString(1);
+
+        GetContentStateRequest.Builder builder = GsonUtil.fromJson(requestJson, GetContentStateRequest.Builder.class);
+
+        GenieService.getAsyncService().getCourseService().getContentState(builder.build(),
+                new IResponseHandler<ContentStateResponse>() {
+                    @Override
+                    public void onSuccess(GenieResponse<ContentStateResponse> genieResponse) {
+                        callbackContext.success(GsonUtil.toJson(genieResponse));
+                    }
+
+                    @Override
+                    public void onError(GenieResponse<ContentStateResponse> genieResponse) {
+                        callbackContext.error(GsonUtil.toJson(genieResponse));
+                    }
+                });
+    }
+
 }
