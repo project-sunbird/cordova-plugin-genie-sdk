@@ -31,6 +31,14 @@ var genieSdkUtil = {
         exec(success, error, PLUGIN_NAME, this.action(), ["openPlayStore", appId]);
     },
 
+    getDeviceAPILevel: function(success,error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["getDeviceAPILevel"]);
+    },
+
+    checkAppAvailability: function(packageName, success, error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["checkAppAvailability", packageName]);
+    },
+
     action: function () {
         return "genieSdkUtil";
     }
