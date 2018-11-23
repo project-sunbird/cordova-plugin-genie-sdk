@@ -126,10 +126,10 @@ public class GenieSdkUtilHandler {
         try {
             String packageName = args.getString(1);
             cordova.getActivity().getApplicationContext().getPackageManager().getApplicationInfo(packageName, 0);
-            callbackContext.success("available");
+            callbackContext.success("true");
         }
         catch (PackageManager.NameNotFoundException e) {
-            callbackContext.success("not avilable");
+            callbackContext.success("false");
         }
 
     }
