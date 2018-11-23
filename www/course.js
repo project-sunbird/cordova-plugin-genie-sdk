@@ -24,6 +24,10 @@ var course = {
         exec(success, error, PLUGIN_NAME, this.action(), ["getBatchDetails", requestJson]);
     },
 
+    getContentState: function (requestJson, success, error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["getContentState", requestJson]);
+    },
+
     action: function () {
         return "course";
     }
