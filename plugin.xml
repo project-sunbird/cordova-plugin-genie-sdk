@@ -106,7 +106,10 @@
         <source-file src="src/android/org/genie/Constants.java" target-dir="src/org/genie/" />
         <source-file src="src/android/org/sunbird/sync/SyncConfiguration.java" target-dir="src/org/sunbird/sync" />
         <source-file src="src/android/org/sunbird/sync/TelemetrySyncOperation.java" target-dir="src/org/sunbird/sync" />
-
+        <source-file src="src/android/org/sunbird/DeepLinkImp.java" target-dir="src/org/sunbird/"/>
+        <source-file src="src/android/org/sunbird/ImportExportUtil.java" target-dir="src/org/sunbird/"/>
+        <source-file src="src/android/org/sunbird/deeplinks/DeepLinkUtility.java" target-dir="src/org/sunbird/deeplinks"/>
+        <source-file src="src/android/org/sunbird/deeplinks/DeepLinkNavigation.java" target-dir="src/org/sunbird/deeplinks"/>
 
     </platform>
 
