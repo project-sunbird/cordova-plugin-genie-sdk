@@ -20,6 +20,7 @@ import org.ekstep.genieservices.commons.bean.ContentFilterCriteria;
 import org.ekstep.genieservices.commons.bean.ContentImport;
 import org.ekstep.genieservices.commons.bean.ContentImportRequest;
 import org.ekstep.genieservices.commons.bean.ContentImportResponse;
+import org.ekstep.genieservices.commons.bean.ContentMarkerRequest;
 import org.ekstep.genieservices.commons.bean.DialCodeRequest;
 import org.ekstep.genieservices.commons.bean.EcarImportRequest;
 import org.ekstep.genieservices.commons.bean.FlagContentRequest;
@@ -62,6 +63,7 @@ public class ContentHandler {
     private static final String TYPE_SEND_FEEDBACK = "sendFeedback";
     private static final String TYPE_FLAG_CONTENT = "flagContent";
     private static final String TYPE_GET_LOCAL_CONTENTS = "getLocalContents";
+    private static final String TYPE_SET_CONTENT_MARKER = "setContentMarker";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -98,6 +100,8 @@ public class ContentHandler {
                 flagContent(args, callbackContext);
             } else if (type.equals(TYPE_GET_LOCAL_CONTENTS)) {
                 getLocalContents(args, callbackContext);
+            } else if (type.equals(TYPE_SET_CONTENT_MARKER)) {
+                setContentMarker(args, callbackContext);
             }
 
         } catch (JSONException e) {
@@ -482,6 +486,24 @@ public class ContentHandler {
                         callbackContext.error(GsonUtil.toJson(genieResponse));
                     }
                 });
+    }
+
+    private static void setContentMarker(JSONArray args, CallbackContext callbackContext) throws JSONException {
+        final String requestJson = args.getString(1);
+
+        ContentMarkerRequest.Builder builder = GsonUtil.fromJson(requestJson, ContentMarkerRequest.Builder.class);
+
+        GenieService.getAsyncService().getContentService().setContentMarker(builder.build(), new IResponseHandler<Void>() {
+            @Override
+            public void onSuccess(GenieResponse<Void> genieResponse) {
+                callbackContext.success(GsonUtil.toJson(genieResponse));
+            }
+
+            @Override
+            public void onError(GenieResponse<Void> genieResponse) {
+                callbackContext.error(GsonUtil.toJson(genieResponse));
+            }
+        });
     }
 
 }
