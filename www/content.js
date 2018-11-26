@@ -69,7 +69,7 @@ var content = {
   },
 
   setContentMarker: function (requestJson, success, error) {
-    exec(success, error, PLUGIN_NAME, this.action, ["setContentMarker", releaseEvents]);
+    exec(success, error, PLUGIN_NAME, this.action, ["setContentMarker", requestJson]);
   },
 
   action: function () {
