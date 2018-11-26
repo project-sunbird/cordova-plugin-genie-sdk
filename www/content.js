@@ -68,6 +68,10 @@ var content = {
     exec(success, error, PLUGIN_NAME, this.action(), ["getLocalContents", requestJson]);
   },
 
+  setContentMarker: function (requestJson, success, error) {
+    exec(success, error, PLUGIN_NAME, this.action, ["setContentMarker", releaseEvents]);
+  },
+
   action: function () {
     return "content";
   }
