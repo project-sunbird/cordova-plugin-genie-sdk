@@ -39,6 +39,10 @@ var genieSdkUtil = {
         exec(success, error, PLUGIN_NAME, this.action(), ["checkAppAvailability", packageName]);
     },
 
+    getDownloadDirectoryPath: function(success,error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["getDownloadDirectoryPath"]);
+    },
+
     action: function () {
         return "genieSdkUtil";
     }

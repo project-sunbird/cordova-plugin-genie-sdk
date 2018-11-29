@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -30,6 +31,7 @@ public class GenieSdkUtilHandler {
     private static final String TYPE_OPEN_PLAY_STORE = "openPlayStore";
     private static final String TYPE_GET_DEVICE_API_LEVEL = "getDeviceAPILevel";
     private static final String TYPE_CHECK_APP_AVAILABILITY = "checkAppAvailability";
+    private static final String TYPE_GET_DOWNLOAD_DIRECTORY_PATH = "getDownloadDirectoryPath";
 
     public static void handle(CordovaInterface cordova, JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -55,6 +57,10 @@ public class GenieSdkUtilHandler {
                 getDeviceAPILevel(callbackContext);
             } else if (type.equals(TYPE_CHECK_APP_AVAILABILITY)){
                 checkAppAvailability(cordova,args,callbackContext);
+            }else if (type.equals(TYPE_CHECK_APP_AVAILABILITY)){
+                checkAppAvailability(cordova,args,callbackContext);
+            }else if (type.equals(TYPE_GET_DOWNLOAD_DIRECTORY_PATH)){
+                getDownloadDirectoryPath(callbackContext);
             }
 
         } catch (JSONException e) {
@@ -132,6 +138,10 @@ public class GenieSdkUtilHandler {
             callbackContext.success("false");
         }
 
+    }
+
+    public static void getDownloadDirectoryPath(CallbackContext callbackContext){
+        callbackContext.success(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString());
     }
 
 }
