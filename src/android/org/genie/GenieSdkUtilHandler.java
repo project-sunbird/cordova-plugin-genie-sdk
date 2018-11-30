@@ -141,7 +141,7 @@ public class GenieSdkUtilHandler {
     }
 
     public static void getDownloadDirectoryPath(CallbackContext callbackContext){
-        callbackContext.success(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString());
+        callbackContext.success("file://"+String.valueOf(getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS))+"/");
     }
 
 }
