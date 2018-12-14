@@ -97,8 +97,7 @@ public class CourseHandler {
     private static void unenrollCourse(JSONArray args, final CallbackContext callbackContext) throws JSONException {
         String requestJson = args.getString(1);
 
-        UnenrolledCoursesRequest.Builder builder = GsonUtil.fromJson(requestJson,
-                UnenrolledCoursesRequest.Builder.class);
+        UnenrollCourseRequest.Builder builder = GsonUtil.fromJson(requestJson, UnenrollCourseRequest.Builder.class);
 
         GenieService.getAsyncService().getCourseService().unenrollCourse(builder.build(), new IResponseHandler<Void>() {
             @Override
