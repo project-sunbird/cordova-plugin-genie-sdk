@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import org.apache.cordova.CallbackContext;
 import org.ekstep.genieservices.GenieService;
 import org.ekstep.genieservices.commons.IResponseHandler;
+import org.ekstep.genieservices.commons.bean.AcceptTermsAndConditionsRequest;
 import org.ekstep.genieservices.commons.bean.EndorseOrAddSkillRequest;
 import org.ekstep.genieservices.commons.bean.FileUploadResult;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
@@ -40,6 +41,7 @@ public class UserProfileHandler {
     private static final String TYPE_SET_PROFILE_VISIBILITY = "setProfileVisibility";
     private static final String TYPE_UPLOAD_FILE = "uploadFile";
     private static final String TYPE_UPDATE_USER_INFO = "updateUserInfo";
+    private static final String TYPE_ACCEPT_TERMS_AND_CONDITIONS = "acceptTermsAndConditions";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -60,7 +62,9 @@ public class UserProfileHandler {
                 uploadFile(args, callbackContext);
             } else if (type.equalsIgnoreCase(TYPE_UPDATE_USER_INFO)) {
                 updateUserInfo(args, callbackContext);
-            } 
+            } else if (type.equalsIgnoreCase(TYPE_ACCEPT_TERMS_AND_CONDITIONS)) {
+                acceptTermsAndConditions(args, callbackContext);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -233,9 +237,8 @@ public class UserProfileHandler {
      */
     private static void uploadFile(JSONArray args, final CallbackContext callbackContext) throws JSONException {
         final String requestJson = args.getString(1);
-        final Gson gson = new GsonBuilder().create();
 
-        UploadFileRequest.Builder builder = gson.fromJson(requestJson, UploadFileRequest.Builder.class);
+        UploadFileRequest.Builder builder = GsonUtil.fromJson(requestJson, UploadFileRequest.Builder.class);
 
         GenieService.getAsyncService().getUserProfileService().uploadFile(builder.build(),
                 new IResponseHandler<FileUploadResult>() {
@@ -246,6 +249,30 @@ public class UserProfileHandler {
 
                     @Override
                     public void onError(GenieResponse<FileUploadResult> genieResponse) {
+                        callbackContext.error(GsonUtil.toJson(genieResponse.getError()));
+                    }
+                });
+    }
+
+    /**
+     * acceptTermsAndConditions
+     */
+    private static void acceptTermsAndConditions(JSONArray args, final CallbackContext callbackContext)
+            throws JSONException {
+        final String requestJson = args.getString(1);
+
+        AcceptTermsAndConditionsRequest.Builder builder = GsonUtil.fromJson(requestJson,
+                AcceptTermsAndConditionsRequest.Builder.class);
+
+        GenieService.getAsyncService().getUserProfileService().acceptTermsAndConditions(builder.build(),
+                new IResponseHandler<Void>() {
+                    @Override
+                    public void onSuccess(GenieResponse<Void> genieResponse) {
+                        callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
+                    }
+
+                    @Override
+                    public void onError(GenieResponse<Void> genieResponse) {
                         callbackContext.error(GsonUtil.toJson(genieResponse.getError()));
                     }
                 });
