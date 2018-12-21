@@ -8,6 +8,8 @@ import org.ekstep.genieservices.commons.bean.ChannelDetailsRequest;
 import org.ekstep.genieservices.commons.bean.Framework;
 import org.ekstep.genieservices.commons.bean.FrameworkDetailsRequest;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
+import org.ekstep.genieservices.commons.bean.SystemSetting;
+import org.ekstep.genieservices.commons.bean.SystemSettingRequest;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,6 +19,7 @@ public class FrameworkHandler {
     private static final String TYPE_GET_CHANNEL_DETAILS = "getChannelDetails";
     private static final String TYPE_GET_FRAMEWORK_DETAILS = "getFrameworkDetails";
     private static final String TYPE_PERSIST_FRAMEWORK_DETAILS = "persistFrameworkDetails";
+    private static final String TYPE_GET_SYSTEM_SETTING = "getSystemSetting";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -28,6 +31,8 @@ public class FrameworkHandler {
                 getFrameworkDetails(args, callbackContext);
             } else if (TYPE_PERSIST_FRAMEWORK_DETAILS.equals(type)) {
                 persistFrameworkDetails(args, callbackContext);
+            } else if (TYPE_GET_SYSTEM_SETTING.equals(type)) {
+                getSystemSetting(args, callbackContext);
             }
 
         } catch (JSONException e) {
@@ -91,6 +96,27 @@ public class FrameworkHandler {
                     @Override
                     public void onError(GenieResponse<Void> genieResponse) {
                         // callbackContext.error(GsonUtil.toJson(genieResponse));
+                    }
+                });
+    }
+
+    private static void getSystemSetting(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+        final String requestJson = args.getString(1);
+
+        SystemSettingRequest.Builder builder = GsonUtil.fromJson(requestJson, SystemSettingRequest.Builder.class);
+        SystemSettingRequest request = builder.build();
+        builder.fromFilePath(Constants.DEFAULT_ASSET_PATH + request.getFilePath());
+
+        GenieService.getAsyncService().getFrameworkService().getSystemSetting(builder.build(),
+                new IResponseHandler<SystemSetting>() {
+                    @Override
+                    public void onSuccess(GenieResponse<SystemSetting> genieResponse) {
+                        callbackContext.success(GsonUtil.toJson(genieResponse));
+                    }
+
+                    @Override
+                    public void onError(GenieResponse<SystemSetting> genieResponse) {
+                        callbackContext.error(GsonUtil.toJson(genieResponse));
                     }
                 });
     }
