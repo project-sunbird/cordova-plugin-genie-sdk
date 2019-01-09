@@ -9,18 +9,23 @@ import org.ekstep.genieservices.commons.IResponseHandler;
 import org.ekstep.genieservices.commons.bean.AcceptTermsAndConditionsRequest;
 import org.ekstep.genieservices.commons.bean.EndorseOrAddSkillRequest;
 import org.ekstep.genieservices.commons.bean.FileUploadResult;
+import org.ekstep.genieservices.commons.bean.GenerateOTPRequest;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
+import org.ekstep.genieservices.commons.bean.LocationSearchCriteria;
+import org.ekstep.genieservices.commons.bean.LocationSearchResult;
 import org.ekstep.genieservices.commons.bean.ProfileVisibilityRequest;
 import org.ekstep.genieservices.commons.bean.TenantInfo;
 import org.ekstep.genieservices.commons.bean.TenantInfoRequest;
 import org.ekstep.genieservices.commons.bean.UpdateUserInfoRequest;
 import org.ekstep.genieservices.commons.bean.UploadFileRequest;
+import org.ekstep.genieservices.commons.bean.UserExistRequest;
 import org.ekstep.genieservices.commons.bean.UserProfile;
 import org.ekstep.genieservices.commons.bean.UserProfileDetailsRequest;
 import org.ekstep.genieservices.commons.bean.UserProfileSkill;
 import org.ekstep.genieservices.commons.bean.UserProfileSkillsRequest;
 import org.ekstep.genieservices.commons.bean.UserSearchCriteria;
 import org.ekstep.genieservices.commons.bean.UserSearchResult;
+import org.ekstep.genieservices.commons.bean.VerifyOTPRequest;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,6 +47,10 @@ public class UserProfileHandler {
     private static final String TYPE_UPLOAD_FILE = "uploadFile";
     private static final String TYPE_UPDATE_USER_INFO = "updateUserInfo";
     private static final String TYPE_ACCEPT_TERMS_AND_CONDITIONS = "acceptTermsAndConditions";
+    private static final String TYPE_IS_ALREADYIN_USE = "isAlreadyInUse";
+    private static final String TYPE_GENERATE_OTP = "generateOTP";
+    private static final String TYPE_VERIFY_OTP = "verifyOTP";
+    private static final String TYPE_SEARCH_LOCATION = "searchLocation";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -64,6 +73,14 @@ public class UserProfileHandler {
                 updateUserInfo(args, callbackContext);
             } else if (type.equalsIgnoreCase(TYPE_ACCEPT_TERMS_AND_CONDITIONS)) {
                 acceptTermsAndConditions(args, callbackContext);
+            } else if (TYPE_IS_ALREADYIN_USE.equals(type)) {
+                isAlreadyInUse(args, callbackContext);
+            } else if (TYPE_GENERATE_OTP.equals(type)) {
+                generateOTP(args, callbackContext);
+            } else if (TYPE_VERIFY_OTP.equals(type)) {
+                verifyOTP(args, callbackContext);
+            } else if (TYPE_SEARCH_LOCATION.equals(type)) {
+                searchLocation(args, callbackContext);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -274,6 +291,82 @@ public class UserProfileHandler {
                     @Override
                     public void onError(GenieResponse<Void> genieResponse) {
                         callbackContext.error(GsonUtil.toJson(genieResponse.getError()));
+                    }
+                });
+    }
+
+    private static void isAlreadyInUse(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+        final String requestJson = args.getString(1);
+
+        UserExistRequest.Builder builder = GsonUtil.fromJson(requestJson, UserExistRequest.Builder.class);
+
+        GenieService.getAsyncService().getUserProfileService().isAlreadyInUse(builder.build(),
+                new IResponseHandler<Void>() {
+                    @Override
+                    public void onSuccess(GenieResponse<Void> genieResponse) {
+                        callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
+                    }
+
+                    @Override
+                    public void onError(GenieResponse<Void> genieResponse) {
+                        callbackContext.error(GsonUtil.toJson(genieResponse.getError()));
+                    }
+                });
+    }
+
+    private static void generateOTP(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+        final String requestJson = args.getString(1);
+
+        GenerateOTPRequest.Builder builder = GsonUtil.fromJson(requestJson, GenerateOTPRequest.Builder.class);
+
+        GenieService.getAsyncService().getUserProfileService().generateOTP(builder.build(),
+                new IResponseHandler<Void>() {
+                    @Override
+                    public void onSuccess(GenieResponse<Void> genieResponse) {
+                        callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
+                    }
+
+                    @Override
+                    public void onError(GenieResponse<Void> genieResponse) {
+                        callbackContext.error(GsonUtil.toJson(genieResponse.getError()));
+                    }
+                });
+    }
+
+    private static void verifyOTP(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+        final String requestJson = args.getString(1);
+
+        VerifyOTPRequest.Builder builder = GsonUtil.fromJson(requestJson, VerifyOTPRequest.Builder.class);
+
+        GenieService.getAsyncService().getUserProfileService().verifyOTP(builder.build(), new IResponseHandler<Void>() {
+            @Override
+            public void onSuccess(GenieResponse<Void> genieResponse) {
+                callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
+            }
+
+            @Override
+            public void onError(GenieResponse<Void> genieResponse) {
+                callbackContext.error(GsonUtil.toJson(genieResponse.getError()));
+            }
+        });
+    }
+
+    private static void searchLocation(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+        final String requestJson = args.getString(1);
+
+        LocationSearchCriteria.SearchBuilder builder = GsonUtil.fromJson(requestJson,
+                LocationSearchCriteria.SearchBuilder.class);
+
+        GenieService.getAsyncService().getUserProfileService().searchLocation(builder.build(),
+                new IResponseHandler<LocationSearchResult>() {
+                    @Override
+                    public void onSuccess(GenieResponse<LocationSearchResult> genieResponse) {
+                        callbackContext.success(GsonUtil.toJson(genieResponse));
+                    }
+
+                    @Override
+                    public void onError(GenieResponse<LocationSearchResult> genieResponse) {
+                        callbackContext.error(GsonUtil.toJson(genieResponse));
                     }
                 });
     }
