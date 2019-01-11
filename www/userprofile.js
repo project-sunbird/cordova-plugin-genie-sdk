@@ -36,6 +36,10 @@ var userProfile = {
         exec(success, error, PLUGIN_NAME, this.action(), ["updateUserInfo", requestJson]);
     },
 
+    acceptTermsAndConditions: function (requestJson, success, error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["acceptTermsAndConditions", requestJson]);
+    },
+
     action: function () {
         return "userProfile";
     }

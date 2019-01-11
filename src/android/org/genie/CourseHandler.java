@@ -13,20 +13,21 @@ import org.ekstep.genieservices.commons.bean.EnrolledCoursesRequest;
 import org.ekstep.genieservices.commons.bean.EnrolledCoursesResponse;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
 import org.ekstep.genieservices.commons.bean.GetContentStateRequest;
+import org.ekstep.genieservices.commons.bean.UnenrolCourseRequest;
 import org.ekstep.genieservices.commons.bean.UpdateContentStateRequest;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 
 /**
- * Created on 14/3/18.
- * shriharsh
+ * Created on 14/3/18. shriharsh
  */
 
 public class CourseHandler {
 
     private static final String TYPE_GET_ENROLLED_COURSES = "getEnrolledCourses";
     private static final String TYPE_ENROLL_COURSE = "enrollCourse";
+    private static final String TYPE_UNENROL_COURSE = "unenrolCourse";
     private static final String TYPE_UPDATE_CONTENT_STATE = "updateContentState";
     private static final String TYPE_GET_COURSE_BATCHES = "getCourseBatches";
     private static final String TYPE_GET_BATCH_DETAILS = "getBatchDetails";
@@ -39,13 +40,15 @@ public class CourseHandler {
                 getEnrolledCourses(args, callbackContext);
             } else if (type.equals(TYPE_ENROLL_COURSE)) {
                 enrollCourse(args, callbackContext);
+            } else if (type.equals(TYPE_UNENROL_COURSE)) {
+                unenrolCourse(args, callbackContext);
             } else if (type.equals(TYPE_UPDATE_CONTENT_STATE)) {
                 updateContentState(args, callbackContext);
             } else if (type.equals(TYPE_GET_COURSE_BATCHES)) {
                 getCourseBatches(args, callbackContext);
             } else if (type.equals(TYPE_GET_BATCH_DETAILS)) {
                 getBatchDetails(args, callbackContext);
-            }else if (type.equals(TYPE_GET_COURSE_CONTENT_STATE)) {
+            } else if (type.equals(TYPE_GET_COURSE_CONTENT_STATE)) {
                 getContentState(args, callbackContext);
             }
 
@@ -91,12 +94,12 @@ public class CourseHandler {
         });
     }
 
-    private static void updateContentState(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+    private static void unenrolCourse(JSONArray args, final CallbackContext callbackContext) throws JSONException {
         String requestJson = args.getString(1);
 
-        UpdateContentStateRequest.Builder builder = GsonUtil.fromJson(requestJson, UpdateContentStateRequest.Builder.class);
+        UnenrolCourseRequest.Builder builder = GsonUtil.fromJson(requestJson, UnenrolCourseRequest.Builder.class);
 
-        GenieService.getAsyncService().getCourseService().updateContentState(builder.build(), new IResponseHandler<Void>() {
+        GenieService.getAsyncService().getCourseService().unenrolCourse(builder.build(), new IResponseHandler<Void>() {
             @Override
             public void onSuccess(GenieResponse<Void> genieResponse) {
                 callbackContext.success(GsonUtil.toJson(genieResponse));
@@ -107,6 +110,26 @@ public class CourseHandler {
                 callbackContext.error(GsonUtil.toJson(genieResponse));
             }
         });
+    }
+
+    private static void updateContentState(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+        String requestJson = args.getString(1);
+
+        UpdateContentStateRequest.Builder builder = GsonUtil.fromJson(requestJson,
+                UpdateContentStateRequest.Builder.class);
+
+        GenieService.getAsyncService().getCourseService().updateContentState(builder.build(),
+                new IResponseHandler<Void>() {
+                    @Override
+                    public void onSuccess(GenieResponse<Void> genieResponse) {
+                        callbackContext.success(GsonUtil.toJson(genieResponse));
+                    }
+
+                    @Override
+                    public void onError(GenieResponse<Void> genieResponse) {
+                        callbackContext.error(GsonUtil.toJson(genieResponse));
+                    }
+                });
     }
 
     private static void getCourseBatches(JSONArray args, final CallbackContext callbackContext) throws JSONException {

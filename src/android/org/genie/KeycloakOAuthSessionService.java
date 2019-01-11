@@ -56,7 +56,7 @@ public class KeycloakOAuthSessionService extends AbstractAuthSessionImpl {
         Map<String, String> requestMap = new HashMap<>();
         try {
             Context context = (Context) mAppContext.getContext();
-            requestMap.put("redirect_uri", BuildConfigUtil.getBuildConfigValue(SunbirdApplication.PACKAGE_NAME, "BASE_URL") + "/oauth2callback");
+            requestMap.put("redirect_uri", BuildConfigUtil.getBuildConfigValue(SunbirdApplication.PACKAGE_NAME, "OAUTH_REDIRECT_URL"));
             requestMap.put("code", userToken);
             requestMap.put("grant_type", "authorization_code");
             requestMap.put("client_id", "android");

@@ -12,6 +12,10 @@ var course = {
         exec(success, error, PLUGIN_NAME, this.action(), ["enrollCourse", requestJson]);
     },
 
+    unenrolCourse: function (requestJson, success, error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["unenrolCourse", requestJson]);
+    },
+
     updateContentState: function (requestJson, success, error) {
         exec(success, error, PLUGIN_NAME, this.action(), ["updateContentState", requestJson]);
     },
