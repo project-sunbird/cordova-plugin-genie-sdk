@@ -305,12 +305,12 @@ public class UserProfileHandler {
                 new IResponseHandler<UserExistResponse>() {
                     @Override
                     public void onSuccess(GenieResponse<UserExistResponse> genieResponse) {
-                        callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
+                        callbackContext.success(GsonUtil.toJson(genieResponse));
                     }
 
                     @Override
                     public void onError(GenieResponse<UserExistResponse> genieResponse) {
-                        callbackContext.error(GsonUtil.toJson(genieResponse.getError()));
+                        callbackContext.error(GsonUtil.toJson(genieResponse));
                     }
                 });
     }
@@ -324,12 +324,12 @@ public class UserProfileHandler {
                 new IResponseHandler<Void>() {
                     @Override
                     public void onSuccess(GenieResponse<Void> genieResponse) {
-                        callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
+                        callbackContext.success(GsonUtil.toJson(genieResponse));
                     }
 
                     @Override
                     public void onError(GenieResponse<Void> genieResponse) {
-                        callbackContext.error(GsonUtil.toJson(genieResponse.getError()));
+                        callbackContext.error(GsonUtil.toJson(genieResponse));
                     }
                 });
     }
@@ -342,12 +342,12 @@ public class UserProfileHandler {
         GenieService.getAsyncService().getUserProfileService().verifyOTP(builder.build(), new IResponseHandler<Void>() {
             @Override
             public void onSuccess(GenieResponse<Void> genieResponse) {
-                callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
+                callbackContext.success(GsonUtil.toJson(genieResponse));
             }
 
             @Override
             public void onError(GenieResponse<Void> genieResponse) {
-                callbackContext.error(GsonUtil.toJson(genieResponse.getError()));
+                callbackContext.error(GsonUtil.toJson(genieResponse));
             }
         });
     }
