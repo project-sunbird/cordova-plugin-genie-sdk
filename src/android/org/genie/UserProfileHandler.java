@@ -19,6 +19,7 @@ import org.ekstep.genieservices.commons.bean.TenantInfoRequest;
 import org.ekstep.genieservices.commons.bean.UpdateUserInfoRequest;
 import org.ekstep.genieservices.commons.bean.UploadFileRequest;
 import org.ekstep.genieservices.commons.bean.UserExistRequest;
+import org.ekstep.genieservices.commons.bean.UserExistResponse;
 import org.ekstep.genieservices.commons.bean.UserProfile;
 import org.ekstep.genieservices.commons.bean.UserProfileDetailsRequest;
 import org.ekstep.genieservices.commons.bean.UserProfileSkill;
@@ -301,14 +302,14 @@ public class UserProfileHandler {
         UserExistRequest.Builder builder = GsonUtil.fromJson(requestJson, UserExistRequest.Builder.class);
 
         GenieService.getAsyncService().getUserProfileService().isAlreadyInUse(builder.build(),
-                new IResponseHandler<Void>() {
+                new IResponseHandler<UserExistResponse>() {
                     @Override
-                    public void onSuccess(GenieResponse<Void> genieResponse) {
+                    public void onSuccess(GenieResponse<UserExistResponse> genieResponse) {
                         callbackContext.success(GsonUtil.toJson(genieResponse.getResult()));
                     }
 
                     @Override
-                    public void onError(GenieResponse<Void> genieResponse) {
+                    public void onError(GenieResponse<UserExistResponse> genieResponse) {
                         callbackContext.error(GsonUtil.toJson(genieResponse.getError()));
                     }
                 });
