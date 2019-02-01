@@ -9,6 +9,7 @@ import org.ekstep.genieservices.commons.bean.ContentUpdateAvailable;
 import org.ekstep.genieservices.commons.bean.DownloadProgress;
 import org.ekstep.genieservices.commons.bean.GenericEvent;
 import org.ekstep.genieservices.commons.bean.ImportContentProgress;
+import org.ekstep.genieservices.commons.bean.StreamingUrlAvailable;
 import org.ekstep.genieservices.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -87,6 +88,16 @@ public class GenieSdkEventListener {
     }
 
     @Subscribe()
+    public void onStreamingUrlAvailable(StreamingUrlAvailable streamingUrlAvailable)
+            throws InterruptedException {
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK,
+                mGson.toJson(new EventResponse(EventResponse.TYPE_STREAMING_URL_AVAILALE, streamingUrlAvailable)));
+        pluginResult.setKeepCallback(true);
+
+        mCallback.sendPluginResult(pluginResult);
+    }    
+
+    @Subscribe()
     public void onGenericEvent(GenericEvent genericEvent)
             throws InterruptedException {
         PluginResult pluginResult = new PluginResult(PluginResult.Status.OK,
@@ -101,6 +112,7 @@ public class GenieSdkEventListener {
         public static final String TYPE_CONTENT_IMPORT_PROGRESS = "contentImportProgress";
         public static final String TYPE_DOWNLOAD_PRGORESS = "downloadProgress";
         public static final String TYPE_CONTENT_UPDATE_AVAILALE = "contentUpdateAvailable";
+        public static final String TYPE_STREAMING_URL_AVAILALE = "streamingUrlAvailable";
         public static final String TYPE_GENERIC_EVENT = "genericEvent";
 
         public final String type;
