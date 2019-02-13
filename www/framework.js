@@ -23,6 +23,10 @@ var framework = {
         exec(success, error, PLUGIN_NAME, this.action(), ["getSystemSetting", requestJson]);
     },
 
+    searchOrganization: function (requestJson, success, error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["searchOrganization", requestJson]);
+    },
+
     action: function () {
         return "framework";
     }

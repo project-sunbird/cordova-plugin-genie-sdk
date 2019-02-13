@@ -8,6 +8,8 @@ import org.ekstep.genieservices.commons.bean.ChannelDetailsRequest;
 import org.ekstep.genieservices.commons.bean.Framework;
 import org.ekstep.genieservices.commons.bean.FrameworkDetailsRequest;
 import org.ekstep.genieservices.commons.bean.GenieResponse;
+import org.ekstep.genieservices.commons.bean.OrganizationSearchCriteria;
+import org.ekstep.genieservices.commons.bean.OrganizationSearchResult;
 import org.ekstep.genieservices.commons.bean.SystemSetting;
 import org.ekstep.genieservices.commons.bean.SystemSettingRequest;
 import org.ekstep.genieservices.commons.utils.GsonUtil;
@@ -20,6 +22,7 @@ public class FrameworkHandler {
     private static final String TYPE_GET_FRAMEWORK_DETAILS = "getFrameworkDetails";
     private static final String TYPE_PERSIST_FRAMEWORK_DETAILS = "persistFrameworkDetails";
     private static final String TYPE_GET_SYSTEM_SETTING = "getSystemSetting";
+    private static final String TYPE_SEARCH_ORGANIZATION = "searchOrganization";
 
     public static void handle(JSONArray args, final CallbackContext callbackContext) {
         try {
@@ -33,6 +36,8 @@ public class FrameworkHandler {
                 persistFrameworkDetails(args, callbackContext);
             } else if (TYPE_GET_SYSTEM_SETTING.equals(type)) {
                 getSystemSetting(args, callbackContext);
+            } else if (TYPE_SEARCH_ORGANIZATION.equals(type)) {
+                searchOrganization(args, callbackContext);
             }
 
         } catch (JSONException e) {
@@ -116,6 +121,26 @@ public class FrameworkHandler {
 
                     @Override
                     public void onError(GenieResponse<SystemSetting> genieResponse) {
+                        callbackContext.error(GsonUtil.toJson(genieResponse));
+                    }
+                });
+    }
+
+    private static void searchOrganization(JSONArray args, final CallbackContext callbackContext) throws JSONException {
+        final String requestJson = args.getString(1);
+
+        OrganizationSearchCriteria.SearchBuilder builder = GsonUtil.fromJson(requestJson,
+                OrganizationSearchCriteria.SearchBuilder.class);
+
+        GenieService.getAsyncService().getFrameworkService().searchOrganization(builder.build(),
+                new IResponseHandler<OrganizationSearchResult>() {
+                    @Override
+                    public void onSuccess(GenieResponse<OrganizationSearchResult> genieResponse) {
+                        callbackContext.success(GsonUtil.toJson(genieResponse));
+                    }
+
+                    @Override
+                    public void onError(GenieResponse<OrganizationSearchResult> genieResponse) {
                         callbackContext.error(GsonUtil.toJson(genieResponse));
                     }
                 });

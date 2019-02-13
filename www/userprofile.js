@@ -40,6 +40,22 @@ var userProfile = {
         exec(success, error, PLUGIN_NAME, this.action(), ["acceptTermsAndConditions", requestJson]);
     },
 
+    isAlreadyInUse: function (requestJson, success, error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["isAlreadyInUse", requestJson]);
+    },
+
+    generateOTP: function (requestJson, success, error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["generateOTP", requestJson]);
+    },
+
+    verifyOTP: function (requestJson, success, error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["verifyOTP", requestJson]);
+    },
+
+    searchLocation: function (requestJson, success, error) {
+        exec(success, error, PLUGIN_NAME, this.action(), ["searchLocation", requestJson]);
+    },
+
     action: function () {
         return "userProfile";
     }
